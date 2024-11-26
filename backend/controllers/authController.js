@@ -1,6 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./db/database.db');
 
+// Controlador de Registro de Usuario
 exports.register = (req, res) => {
     const { Nombre, Apellido, Email, Contraseña } = req.body;
     const sql = 'INSERT INTO Usuarios (Nombre, Apellido, Email, Contraseña) VALUES (?, ?, ?, ?)';
@@ -13,6 +14,7 @@ exports.register = (req, res) => {
     });
 };
 
+// Controlador de Login de Usuario
 exports.login = (req, res) => {
     const { Email, Contraseña } = req.body;
     const sql = 'SELECT * FROM Usuarios WHERE Email = ? AND Contraseña = ?';

@@ -1,6 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./db/database.db');
 
+// Obtener todas las tareas
 exports.getAllTasks = (req, res) => {
     const sql = 'SELECT * FROM Tareas';
     db.all(sql, [], (err, rows) => {
@@ -12,6 +13,7 @@ exports.getAllTasks = (req, res) => {
     });
 };
 
+// Obtener tarea por ID
 exports.getTaskById = (req, res) => {
     const { id } = req.params;
     const sql = 'SELECT * FROM Tareas WHERE ID_Tarea = ?';
@@ -24,6 +26,7 @@ exports.getTaskById = (req, res) => {
     });
 };
 
+// Crear nueva tarea
 exports.createTask = (req, res) => {
     const { ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite } = req.body;
     const sql = 'INSERT INTO Tareas (ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite) VALUES (?, ?, ?, ?, ?, ?)';
@@ -36,6 +39,7 @@ exports.createTask = (req, res) => {
     });
 };
 
+// Actualizar tarea por ID
 exports.updateTask = (req, res) => {
     const { id } = req.params;
     const { Tarea, Prioridad, Estado, Fecha_Límite } = req.body;
@@ -49,6 +53,7 @@ exports.updateTask = (req, res) => {
     });
 };
 
+// Eliminar tarea por ID
 exports.deleteTask = (req, res) => {
     const { id } = req.params;
     const sql = 'DELETE FROM Tareas WHERE ID_Tarea = ?';

@@ -23,7 +23,7 @@ const createList = (req, res) => {
 const updateList = (req, res) => {
     const listId = parseInt(req.params.id);
     const list = lists.find(l => l.id === listId);
-    
+
     if (!list) {
         return res.status(404).json({ message: 'Lista no encontrada' });
     }

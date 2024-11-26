@@ -2,10 +2,9 @@ const express = require('express');
 const router = express.Router();
 const taskController = require('../controllers/taskController');
 
-// Definir las rutas relacionadas con las tareas
 router.get('/', taskController.getAllTasks);
-router.post('/', taskController.createTask);
 router.get('/:id', taskController.getTaskById);
+router.post('/', taskController.createTask);
 router.put('/:id', taskController.updateTask);
 router.delete('/:id', taskController.deleteTask);
 
