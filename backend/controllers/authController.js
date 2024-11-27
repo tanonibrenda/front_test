@@ -18,8 +18,8 @@ exports.register = (req, res) => {
 };
 
 // Controlador de Login de Usuario
-exports.login = (req, res) => { 
-    const { Email, Contraseña } = req.body; 
+exports.login = (req, res) => {
+    const { Email, Contraseña } = req.body;
     const sql = 'SELECT * FROM Usuarios WHERE Email = ? AND Contraseña = ?';
     console.log('Intentando iniciar sesión para el email:', Email);
     db.get(sql, [Email, Contraseña], (err, row) => {

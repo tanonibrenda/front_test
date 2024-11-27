@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';  // Importar useNavigate
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -9,6 +10,7 @@ const Register = () => {
     contraseña: '',
     confirmarContraseña: ''
   });
+  const navigate = useNavigate();  // Inicializar useNavigate
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,6 +37,7 @@ const Register = () => {
 
       console.log('Datos del usuario registrados:', response.data);
       alert('Registro exitoso');
+      navigate('/user-page');  // Redirigir a UserPage después de un registro exitoso
     } catch (error) {
       console.error('Error al registrar usuario:', error);
       alert('Hubo un error en el registro');

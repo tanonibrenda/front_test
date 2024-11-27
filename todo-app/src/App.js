@@ -3,12 +3,13 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
 import Home from './components/Home';
 import Register from './components/Register';
-import Login from './components/Login'
+import Login from './components/Login';
 import Welcome from './components/Welcome';
 import CreateList from './components/CreateList';
-import TaskList from './components/TaskList';  
-import About from './components/About'
+import TaskList from './components/TaskList';
+import About from './components/About';
 import Footer from './components/Footer';
+import UserPage from './components/UserPage';  // Importar UserPage
 import './App.css';
 
 function App() {
@@ -24,9 +25,10 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/welcome" element={<Welcome nombre={nombre} apellido={apellido} />} />
-          <Route path="/create-list" element={<CreateList />} /> 
+          <Route path="/create-list" element={<CreateList />} />
           <Route path="/task-list" element={<TaskList />} />
-          <Route path="/about" element={<About />} />  
+          <Route path="/about" element={<About />} />
+          <Route path="/user-page" element={<UserPage />} /> {/* Agregar ruta UserPage */}
         </Routes>
         <Footer />
       </div>
@@ -35,4 +37,3 @@ function App() {
 }
 
 export default App;
-
