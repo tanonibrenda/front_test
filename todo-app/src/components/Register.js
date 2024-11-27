@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -17,10 +18,27 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aquí puedes agregar la lógica para enviar los datos del formulario
-    console.log(form);
+    if (form.contraseña !== form.confirmarContraseña) {
+      alert('Las contraseñas no coinciden');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/users/register', {
+        Nombre: form.nombre,
+        Apellido: form.apellido,
+        Email: form.email,
+        Contraseña: form.contraseña
+      });
+
+      console.log('Datos del usuario registrados:', response.data);
+      alert('Registro exitoso');
+    } catch (error) {
+      console.error('Error al registrar usuario:', error);
+      alert('Hubo un error en el registro');
+    }
   };
 
   return (
