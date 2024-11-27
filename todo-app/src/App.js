@@ -5,10 +5,11 @@ import Home from './components/Home';
 import Register from './components/Register';
 import Welcome from './components/Welcome';
 import CreateList from './components/CreateList';
+import TaskList from './components/TaskList';  
 import Footer from './components/Footer';
+import './App.css';
 
 function App() {
-  // Suponiendo que estos valores se obtienen después de registrarse o iniciar sesión
   const nombre = "Juan";
   const apellido = "Pérez";
 
@@ -20,7 +21,8 @@ function App() {
           <Route exact path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/welcome" element={<Welcome nombre={nombre} apellido={apellido} />} />
-          <Route path="/crear-lista" element={<CreateList />} />
+          <Route path="/create-list" element={<CreateList />} />  {/* Asegurarse de usar la ruta correcta */}
+          <Route path="/task-list" element={<TaskList />} />  {/* Asegurarse de incluir la ruta del TaskList */}
           {/* Otros routes para las demás páginas */}
         </Routes>
         <Footer />
@@ -30,3 +32,4 @@ function App() {
 }
 
 export default App;
+

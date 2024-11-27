@@ -8,7 +8,14 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
-app.use('/api/users', userRoutes);
+
+// Ruta básica para verificar que el servidor está funcionando
+app.get('/', (req, res) => {
+    res.send('Servidor Express está funcionando');
+});
+
+// Usar las rutas definidas en otros archivos
+app.use('/api/users', userRoutes); 
 app.use('/api/tasks', taskRoutes);
 app.use('/api/lists', listRoutes);
 
