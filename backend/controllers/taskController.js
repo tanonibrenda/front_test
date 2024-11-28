@@ -59,16 +59,26 @@ exports.createTask = (req, res) => {
 // Actualizar tarea por ID
 exports.updateTask = (req, res) => {
     const { id } = req.params;
-    const { Tarea, Prioridad, Estado, Fecha_Límite } = req.body;
-    const sql = 'UPDATE Tareas SET Tarea = ?, Prioridad = ?, Estado = ?, Fecha_Límite = ? WHERE ID_Tarea = ?';
-    console.log(`Actualizando tarea con ID ${id}:`, { Tarea, Prioridad, Estado, Fecha_Límite });
-    db.run(sql, [Tarea, Prioridad, Estado, Fecha_Límite, id], function(err) {
+    const { ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite } = req.body;
+    const sql = 'UPDATE Tareas SET Tarea = ?, Prioridad = ?, Estado = ?, Fecha_Creación = ?, Fecha_Límite = ? WHERE ID_Tarea = ?';
+    console.log(`Actualizando tarea con ID ${id}:`, { Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite });
+    db.run(sql, [Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite, id], function(err) {
         if (err) {
             console.error(`Error al actualizar tarea con ID ${id}:`, err.message);
             res.status(500).json({ error: err.message });
             return;
         }
-        res.json({ message: 'Task updated successfully' });
+        res.json({
+            task: {
+                ID_Lista,
+                Tarea,
+                Prioridad,
+                Estado,
+                Fecha_Creación,
+                Fecha_Límite,
+                id
+            }
+        });
     });
 };
 
@@ -86,4 +96,3 @@ exports.deleteTask = (req, res) => {
         res.json({ message: 'Task deleted successfully' });
     });
 };
-

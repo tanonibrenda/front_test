@@ -1,24 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const TaskList = () => {
   const [listName, setListName] = useState('');
+  const [lists, setLists] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [task, setTask] = useState({
-    tarea: '',
-    prioridad: 'Hacer',
-    estado: 'No Iniciado',
-    fechaCreacion: '',
-    fechaLimite: ''
+    ID_Lista: '',
+    Tarea: '',
+    Prioridad: 'Hacer',
+    Estado: 'No Iniciado',
+    Fecha_Creación: '',
+    Fecha_Límite: ''
   });
   const [editingTaskId, setEditingTaskId] = useState(null);
 
+  useEffect(() => {
+    const fetchLists = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/lists');
+        setLists(response.data.lists || []);
+      } catch (error) {
+        console.error('Error al cargar listas:', error);
+      }
+    };
+    fetchLists();
+  }, []);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/tasks');
+        setTasks(response.data.tasks || []);
+      } catch (error) {
+        console.error('Error al cargar tareas:', error);
+      }
+    };
+    fetchTasks();
+  }, []);
+
   const handleCreateList = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/lists', {
-        name: listName
-      });
-      console.log('Lista creada:', response.data);
+      const response = await axios.post('http://localhost:5000/api/lists', { name: listName });
+      setLists([...lists, response.data]);
       setListName('');
     } catch (error) {
       console.error('Error al crear lista:', error);
@@ -27,46 +51,66 @@ const TaskList = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setTask({
-      ...task,
-      [name]: value
-    });
+    setTask({ ...task, [name]: value });
   };
 
   const handleCreateTask = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/tasks', task);
-      console.log('Tarea creada:', response.data);
+      const response = await axios.post('http://localhost:5000/api/tasks', {
+        ID_Lista: task.ID_Lista,
+        Tarea: task.Tarea,
+        Prioridad: task.Prioridad,
+        Estado: task.Estado,
+        Fecha_Creación: task.Fecha_Creación,
+        Fecha_Límite: task.Fecha_Límite
+      });
       setTasks([...tasks, response.data.task]);
       setTask({
-        tarea: '',
-        prioridad: 'Hacer',
-        estado: 'No Iniciado',
-        fechaCreacion: '',
-        fechaLimite: ''
+        ID_Lista: '',
+        Tarea: '',
+        Prioridad: 'Hacer',
+        Estado: 'No Iniciado',
+        Fecha_Creación: '',
+        Fecha_Límite: ''
       });
     } catch (error) {
       console.error('Error al crear tarea:', error);
     }
   };
 
-  const handleEditTask = async (id) => {
-    const taskToEdit = tasks.find((t) => t.id === id);
-    setTask(taskToEdit);
-    setEditingTaskId(id);
+  const handleEditTask = (id) => {
+    const taskToEdit = tasks.find((t) => t.ID_Tarea === id);
+    if (taskToEdit) {
+      setTask({
+        ID_Lista: taskToEdit.ID_Lista || '',
+        Tarea: taskToEdit.Tarea || '',
+        Prioridad: taskToEdit.Prioridad || 'Hacer',
+        Estado: taskToEdit.Estado || 'No Iniciado',
+        Fecha_Creación: taskToEdit.Fecha_Creación || '',
+        Fecha_Límite: taskToEdit.Fecha_Límite || ''
+      });
+      setEditingTaskId(id);
+    }
   };
 
   const handleUpdateTask = async () => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/tasks/${editingTaskId}`, task);
-      console.log('Tarea actualizada:', response.data);
-      setTasks(tasks.map((t) => (t.id === editingTaskId ? response.data.task : t)));
+      const response = await axios.put(`http://localhost:5000/api/tasks/${editingTaskId}`, {
+        ID_Lista: task.ID_Lista,
+        Tarea: task.Tarea,
+        Prioridad: task.Prioridad,
+        Estado: task.Estado,
+        Fecha_Creación: task.Fecha_Creación,
+        Fecha_Límite: task.Fecha_Límite
+      });
+      setTasks(tasks.map((t) => (t.ID_Tarea === editingTaskId ? response.data.task : t)));
       setTask({
-        tarea: '',
-        prioridad: 'Hacer',
-        estado: 'No Iniciado',
-        fechaCreacion: '',
-        fechaLimite: ''
+        ID_Lista: '',
+        Tarea: '',
+        Prioridad: 'Hacer',
+        Estado: 'No Iniciado',
+        Fecha_Creación: '',
+        Fecha_Límite: ''
       });
       setEditingTaskId(null);
     } catch (error) {
@@ -77,8 +121,7 @@ const TaskList = () => {
   const handleDeleteTask = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/tasks/${id}`);
-      console.log('Tarea eliminada');
-      setTasks(tasks.filter((t) => t.id !== id));
+      setTasks(tasks.filter((t) => t.ID_Tarea !== id));
     } catch (error) {
       console.error('Error al eliminar tarea:', error);
     }
@@ -105,23 +148,38 @@ const TaskList = () => {
 
       <h3>Crear Nueva Tarea</h3>
       <div className="form-group">
-        <label htmlFor="tarea">Tarea</label>
+        <label htmlFor="ID_Lista">Lista</label>
+        <select
+          className="form-control"
+          id="ID_Lista"
+          name="ID_Lista"
+          value={task.ID_Lista}
+          onChange={handleChange}
+        >
+          <option value="">Seleccione una lista</option>
+          {lists.length > 0 && lists.map((list) => (
+            <option key={list.id} value={list.id}>{list.name}</option>
+          ))}
+        </select>
+      </div>
+      <div className="form-group">
+        <label htmlFor="Tarea">Tarea</label>
         <input
           type="text"
           className="form-control"
-          id="tarea"
-          name="tarea"
-          value={task.tarea}
+          id="Tarea"
+          name="Tarea"
+          value={task.Tarea}
           onChange={handleChange}
         />
       </div>
       <div className="form-group">
-        <label htmlFor="prioridad">Prioridad</label>
+        <label htmlFor="Prioridad">Prioridad</label>
         <select
           className="form-control"
-          id="prioridad"
-          name="prioridad"
-          value={task.prioridad}
+          id="Prioridad"
+          name="Prioridad"
+          value={task.Prioridad}
           onChange={handleChange}
         >
           <option value="Hacer">Hacer</option>
@@ -131,12 +189,12 @@ const TaskList = () => {
         </select>
       </div>
       <div className="form-group">
-        <label htmlFor="estado">Estado</label>
+        <label htmlFor="Estado">Estado</label>
         <select
           className="form-control"
-          id="estado"
-          name="estado"
-          value={task.estado}
+          id="Estado"
+          name="Estado"
+          value={task.Estado}
           onChange={handleChange}
         >
           <option value="No Iniciado">No Iniciado</option>
@@ -146,24 +204,24 @@ const TaskList = () => {
         </select>
       </div>
       <div className="form-group">
-        <label htmlFor="fechaCreacion">Fecha de Creación</label>
+        <label htmlFor="Fecha_Creación">Fecha de Creación</label>
         <input
           type="date"
           className="form-control"
-          id="fechaCreacion"
-          name="fechaCreacion"
-          value={task.fechaCreacion}
+          id="Fecha_Creación"
+          name="Fecha_Creación"
+          value={task.Fecha_Creación}
           onChange={handleChange}
         />
       </div>
       <div className="form-group">
-        <label htmlFor="fechaLimite">Fecha Límite</label>
+        <label htmlFor="Fecha_Límite">Fecha Límite</label>
         <input
           type="date"
           className="form-control"
-          id="fechaLimite"
-          name="fechaLimite"
-          value={task.fechaLimite}
+          id="Fecha_Límite"
+          name="Fecha_Límite"
+          value={task.Fecha_Límite}
           onChange={handleChange}
         />
       </div>
@@ -178,11 +236,11 @@ const TaskList = () => {
 
       <h3>Lista de Tareas</h3>
       <ul>
-        {tasks.map((task) => (
-          <li key={task.id}>
-            {task.tarea} - {task.prioridad} - {task.estado} - {task.fechaCreacion} - {task.fechaLimite}
-            <button className="btn btn-warning ml-3" onClick={() => handleEditTask(task.id)}>Editar</button>
-            <button className="btn btn-danger ml-3" onClick={() => handleDeleteTask(task.id)}>Borrar</button>
+        {tasks.length > 0 && tasks.map((task) => (
+          <li key={task.ID_Tarea}>
+            {task.Tarea} - {task.Prioridad} - {task.Estado} - {task.Fecha_Creación} - {task.Fecha_Límite} - Lista: {lists.find(list => list.id === task.ID_Lista)?.name || 'Sin lista'}
+            <button className="btn btn-warning ml-3" onClick={() => handleEditTask(task.ID_Tarea)}>Editar</button>
+            <button className="btn btn-danger ml-3" onClick={() => handleDeleteTask(task.ID_Tarea)}>Borrar</button>
           </li>
         ))}
       </ul>
