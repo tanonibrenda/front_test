@@ -15,14 +15,15 @@ const Login = () => {
         Contraseña: password
       });
 
-      if (response.data.User) {
-        console.log(`Usuario encontrado: ${response.data.User.Nombre}`);
-        alert(`Bienvenido ${response.data.User.Nombre}`);
+      if (response.data.user) {
+        console.log(`Usuario encontrado: ${response.data.user.Nombre}`);
+        localStorage.setItem('token', response.data.token);  // Guardar el token en localStorage
+        alert(`Bienvenido ${response.data.user.Nombre}`);
         navigate('/user-page');  // Redirigir a UserPage después de un inicio de sesión exitoso
       }
     } catch (error) {
       console.error(error);
-      alert('Usuario no encontrado');
+      alert('Usuario no encontrado o contraseña incorrecta');
     }
   };
 
@@ -30,7 +31,28 @@ const Login = () => {
     <div className="container mt-5">
       <h2>Iniciar Sesión</h2>
       <form onSubmit={handleLogin}>
-        {/* ...Formulario sin cambios... */}
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            className="form-control"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Contraseña</label>
+          <input
+            type="password"
+            className="form-control"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
         <button type="submit" className="btn btn-primary">Iniciar Sesión</button>
       </form>
     </div>

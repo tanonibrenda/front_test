@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Importar Navigate
 import Header from './components/Header';
 import Home from './components/Home';
 import Register from './components/Register';
@@ -9,12 +9,17 @@ import CreateList from './components/CreateList';
 import TaskList from './components/TaskList';
 import About from './components/About';
 import Footer from './components/Footer';
-import UserPage from './components/UserPage';  // Importar UserPage
+import UserPage from './components/UserPage';
 import './App.css';
 
 function App() {
   const nombre = "Juan";
   const apellido = "Pérez";
+
+  const PrivateRoute = ({ element: Component, ...rest }) => {
+    const token = localStorage.getItem('token');
+    return token ? <Component {...rest} /> : <Navigate to="/login" />;
+  };
 
   return (
     <Router>
@@ -28,7 +33,7 @@ function App() {
           <Route path="/create-list" element={<CreateList />} />
           <Route path="/task-list" element={<TaskList />} />
           <Route path="/about" element={<About />} />
-          <Route path="/user-page" element={<UserPage />} /> {/* Agregar ruta UserPage */}
+          <Route path="/user-page" element={<PrivateRoute element={UserPage} />} />
         </Routes>
         <Footer />
       </div>
@@ -37,3 +42,4 @@ function App() {
 }
 
 export default App;
+

@@ -42,7 +42,17 @@ exports.createTask = (req, res) => {
             return;
         }
         console.log(`Tarea creada con ID: ${this.lastID}`);
-        res.json({ taskID: this.lastID });
+        res.json({
+            task: {
+                ID_Lista,
+                Tarea,
+                Prioridad,
+                Estado,
+                Fecha_Creación,
+                Fecha_Límite,
+                id: this.lastID
+            }
+        });
     });
 };
 
@@ -76,3 +86,4 @@ exports.deleteTask = (req, res) => {
         res.json({ message: 'Task deleted successfully' });
     });
 };
+
