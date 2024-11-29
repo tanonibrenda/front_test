@@ -1,47 +1,66 @@
-// Mock data para simular una base de datos
-let lists = [
-    { id: 1, name: 'Lista de compras' },
-    { id: 2, name: 'Tareas del trabajo' }
-];
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database('./db/database.db');
 
-// Obtener todas las listas
-const getAllLists = (req, res) => {
-    res.status(200).json(lists);
+// Obtener todas las listas para un usuario
+const getAllListsForUser = (req, res) => {
+    const userId = req.user.id;
+    const sql = 'SELECT * FROM Listas WHERE userID = ?';
+    db.all(sql, [userId], (err, rows) => {
+        if (err) {
+            console.error('Error al obtener listas:', err.message);
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json({ lists: rows });
+    });
 };
 
-// Crear una nueva lista
-const createList = (req, res) => {
-    const newList = {
-        id: lists.length + 1,
-        name: req.body.name
-    };
-    lists.push(newList);
-    res.status(201).json(newList);
+// Crear una nueva lista para un usuario
+const createListForUser = (req, res) => {
+    const userId = req.user.id;
+    const sql = 'INSERT INTO Listas (name, userID) VALUES (?, ?)';
+    db.run(sql, [req.body.name, userId], function(err) {
+        if (err) {
+            console.error('Error al crear lista:', err.message);
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json({ id: this.lastID, name: req.body.name, userID: userId });
+    });
 };
 
 // Actualizar una lista por ID
 const updateList = (req, res) => {
-    const listId = parseInt(req.params.id);
-    const list = lists.find(l => l.id === listId);
-
-    if (!list) {
-        return res.status(404).json({ message: 'Lista no encontrada' });
-    }
-
-    list.name = req.body.name;
-    res.status(200).json(list);
+    const { id } = req.params;
+    const { name } = req.body;
+    const sql = 'UPDATE Listas SET name = ? WHERE id = ?';
+    db.run(sql, [name, id], function(err) {
+        if (err) {
+            console.error(`Error al actualizar lista con ID ${id}:`, err.message);
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json({ id, name });
+    });
 };
 
 // Eliminar una lista por ID
 const deleteList = (req, res) => {
-    const listId = parseInt(req.params.id);
-    lists = lists.filter(l => l.id !== listId);
-    res.status(204).end();
+    const { id } = req.params;
+    const sql = 'DELETE FROM Listas WHERE id = ?';
+    db.run(sql, id, function(err) {
+        if (err) {
+            console.error(`Error al eliminar lista con ID ${id}:`, err.message);
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.status(204).end();
+    });
 };
 
 module.exports = {
-    getAllLists,
-    createList,
+    getAllListsForUser,
+    createListForUser,
     updateList,
     deleteList,
 };

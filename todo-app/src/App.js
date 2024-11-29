@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Importar Navigate
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Header from './components/Header';
 import Home from './components/Home';
 import Register from './components/Register';
@@ -10,6 +10,8 @@ import TaskList from './components/TaskList';
 import About from './components/About';
 import Footer from './components/Footer';
 import UserPage from './components/UserPage';
+import MyList from './components/My_List';
+import EditTask from './components/EditTask'; // Importar EditTask
 import './App.css';
 
 function App() {
@@ -34,6 +36,8 @@ function App() {
           <Route path="/task-list" element={<TaskList />} />
           <Route path="/about" element={<About />} />
           <Route path="/user-page" element={<PrivateRoute element={UserPage} />} />
+          <Route path="/my-lists" element={<PrivateRoute element={MyList} />} /> {/* Nueva ruta protegida */}
+          <Route path="/edit-task/:taskId" element={<PrivateRoute element={EditTask} />} /> {/* Nueva ruta protegida para editar tareas */}
         </Routes>
         <Footer />
       </div>
@@ -42,4 +46,3 @@ function App() {
 }
 
 export default App;
-

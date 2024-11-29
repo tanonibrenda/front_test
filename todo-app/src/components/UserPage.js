@@ -1,25 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';  // Importar useNavigate
+import { useNavigate } from 'react-router-dom';
 
 const UserPage = () => {
   const [lists, setLists] = useState([]);
-  const navigate = useNavigate();  // Inicializar useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLists = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/lists');
-        setLists(response.data.lists || []);  // Asegúrate de que la lista no sea undefined
+        const token = localStorage.getItem('token'); // Obtener el token del almacenamiento local
+        if (!token) {
+          navigate('/login'); // Redirigir a la página de inicio de sesión si no hay token
+          return;
+        }
+        const response = await axios.get('http://localhost:5000/api/lists', {
+          headers: { Authorization: `Bearer ${token}` } // Incluir el token en los encabezados de la solicitud
+        });
+        setLists(response.data.lists || []);
       } catch (error) {
         console.error('Error al obtener listas:', error);
       }
     };
     fetchLists();
-  }, []);
+  }, [navigate]);
 
   const handleCreateList = () => {
-    navigate('/task-list');  // Redirigir a TaskList.js
+    navigate('/task-list');
   };
 
   return (
