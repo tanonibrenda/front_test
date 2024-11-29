@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const TaskList = () => {
   const [listName, setListName] = useState('');
@@ -14,47 +15,65 @@ const TaskList = () => {
     Fecha_Límite: ''
   });
   const [editingTaskId, setEditingTaskId] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLists = async () => {
       try {
-        const token = localStorage.getItem('token'); // Obtener el token del almacenamiento local
+        const token = localStorage.getItem('token'); 
+        if (!token){
+          navigate('/login');
+          return;
+        }
         const response = await axios.get('http://localhost:5000/api/lists', {
-          headers: { Authorization: `Bearer ${token}` } // Incluir el token en los encabezados de la solicitud
+          headers: { Authorization: `Bearer ${token}` } 
         });
         setLists(response.data.lists || []);
       } catch (error) {
         console.error('Error al cargar listas:', error);
+        if (error.response && error.response.status === 401){
+          navigate('/login')
+        }
       }
     };
     fetchLists();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const token = localStorage.getItem('token'); // Obtener el token del almacenamiento local
+        const token = localStorage.getItem('token'); 
+        if (!token){
+          navigate('/login');
+          return;
+        }
         const response = await axios.get('http://localhost:5000/api/tasks', {
-          headers: { Authorization: `Bearer ${token}` } // Incluir el token en los encabezados de la solicitud
+          headers: { Authorization: `Bearer ${token}` } 
         });
         setTasks(response.data.tasks || []);
       } catch (error) {
         console.error('Error al cargar tareas:', error);
+        if (error.response && error.response.status === 401){
+          navigate('/login')
+        }
       }
     };
     fetchTasks();
-  }, []);
+  }, [navigate]);
 
   const handleCreateList = async () => {
     try {
-      const token = localStorage.getItem('token'); // Obtener el token del almacenamiento local
+      const token = localStorage.getItem('token'); 
       const response = await axios.post('http://localhost:5000/api/lists', { name: listName }, {
-        headers: { Authorization: `Bearer ${token}` } // Incluir el token en los encabezados de la solicitud
+        headers: { Authorization: `Bearer ${token}` } 
       });
       setLists([...lists, response.data]);
       setListName('');
     } catch (error) {
       console.error('Error al crear lista:', error);
+      if (error.response && error.response.status === 401){
+        navigate('/login');
+      }
     }
   };
 
@@ -65,7 +84,7 @@ const TaskList = () => {
 
   const handleCreateTask = async () => {
     try {
-      const token = localStorage.getItem('token'); // Obtener el token del almacenamiento local
+      const token = localStorage.getItem('token'); 
       const response = await axios.post('http://localhost:5000/api/tasks', {
         ID_Lista: task.ID_Lista,
         Tarea: task.Tarea,
@@ -74,7 +93,7 @@ const TaskList = () => {
         Fecha_Creación: task.Fecha_Creación,
         Fecha_Límite: task.Fecha_Límite
       }, {
-        headers: { Authorization: `Bearer ${token}` } // Incluir el token en los encabezados de la solicitud
+        headers: { Authorization: `Bearer ${token}` } 
       });
       setTasks([...tasks, response.data.task]);
       setTask({
@@ -87,6 +106,9 @@ const TaskList = () => {
       });
     } catch (error) {
       console.error('Error al crear tarea:', error);
+      if (error.response && error.response.status === 401){
+        navigate('/login');
+      }
     }
   };
 
@@ -107,7 +129,7 @@ const TaskList = () => {
 
   const handleUpdateTask = async () => {
     try {
-      const token = localStorage.getItem('token'); // Obtener el token del almacenamiento local
+      const token = localStorage.getItem('token'); 
       const response = await axios.put(`http://localhost:5000/api/tasks/${editingTaskId}`, {
         ID_Lista: task.ID_Lista,
         Tarea: task.Tarea,
@@ -116,7 +138,7 @@ const TaskList = () => {
         Fecha_Creación: task.Fecha_Creación,
         Fecha_Límite: task.Fecha_Límite
       }, {
-        headers: { Authorization: `Bearer ${token}` } // Incluir el token en los encabezados de la solicitud
+        headers: { Authorization: `Bearer ${token}` } 
       });
       setTasks(tasks.map((t) => (t.ID_Tarea === editingTaskId ? response.data.task : t)));
       setTask({
@@ -130,14 +152,17 @@ const TaskList = () => {
       setEditingTaskId(null);
     } catch (error) {
       console.error('Error al actualizar tarea:', error);
+      if (error.response && error.response.status === 401){
+        navigate('login')
+      }
     }
   };
 
   const handleDeleteTask = async (id) => {
     try {
-      const token = localStorage.getItem('token'); // Obtener el token del almacenamiento local
+      const token = localStorage.getItem('token'); 
       await axios.delete(`http://localhost:5000/api/tasks/${id}`, {
-        headers: { Authorization: `Bearer ${token}` } // Incluir el token en los encabezados de la solicitud
+        headers: { Authorization: `Bearer ${token}` } 
       });
       setTasks(tasks.filter((t) => t.ID_Tarea !== id));
     } catch (error) {
@@ -193,79 +218,78 @@ const TaskList = () => {
       />
     </div>
     <div className="form-group">
-      <label htmlFor="Prioridad">Prioridad</label>
-      <select
-        className="form-control"
-        id="Prioridad"
-        name="Prioridad"
-        value={task.Prioridad}
-        onChange={handleChange}
-      >
-        <option value="Hacer">Hacer</option>
-        <option value="Planificar">Planificar</option>
-        <option value="Delegar">Delegar</option>
-        <option value="Ignorar">Ignorar</option>
-      </select>
-    </div>
-    <div className="form-group">
-      <label htmlFor="Estado">Estado</label>
-      <select
-        className="form-control"
-        id="Estado"
-        name="Estado"
-        value={task.Estado}
-        onChange={handleChange}
-      >
-        <option value="No Iniciado">No Iniciado</option>
-        <option value="En Curso">En Curso</option>
-        <option value="Bloqueado">Bloqueado</option>
-        <option value="Completado">Completado</option>
-      </select>
-    </div>
-    <div className="form-group">
-      <label htmlFor="Fecha_Creación">Fecha de Creación</label>
-      <input
-        type="date"
-        className="form-control"
-        id="Fecha_Creación"
-        name="Fecha_Creación"
-        value={task.Fecha_Creación}
-        onChange={handleChange}
-      />
-    </div>
-    <div className="form-group">
-      <label htmlFor="Fecha_Límite">Fecha Límite</label>
-      <input
-        type="date"
-        className="form-control"
-        id="Fecha_Límite"
-        name="Fecha_Límite"
-        value={task.Fecha_Límite}
-        onChange={handleChange}
-      />
-    </div>
-      
-    {editingTaskId ? (
-      <button className="btn btn-primary mt-3" onClick={handleUpdateTask}>Actualizar Tarea</button>
-    ) : (
-      <button className="btn btn-primary mt-3" onClick={handleCreateTask}>Crear Tarea</button>
-    )}
+        <label htmlFor="Prioridad">Prioridad</label>
+        <select
+          className="form-control"
+          id="Prioridad"
+          name="Prioridad"
+          value={task.Prioridad}
+          onChange={handleChange}
+        >
+          <option value="Hacer">Hacer</option>
+          <option value="Planificar">Planificar</option>
+          <option value="Delegar">Delegar</option>
+          <option value="Ignorar">Ignorar</option>
+        </select>
+      </div>
+      <div className="form-group">
+        <label htmlFor="Estado">Estado</label>
+        <select
+          className="form-control"
+          id="Estado"
+          name="Estado"
+          value={task.Estado}
+          onChange={handleChange}
+        >
+          <option value="No Iniciado">No Iniciado</option>
+          <option value="En Curso">En Curso</option>
+          <option value="Bloqueado">Bloqueado</option>
+          <option value="Completado">Completado</option>
+        </select>
+      </div>
+      <div className="form-group">
+        <label htmlFor="Fecha_Creación">Fecha de Creación</label>
+        <input
+          type="date"
+          className="form-control"
+          id="Fecha_Creación"
+          name="Fecha_Creación"
+          value={task.Fecha_Creación}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="Fecha_Límite">Fecha Límite</label>
+        <input
+          type="date"
+          className="form-control"
+          id="Fecha_Límite"
+          name="Fecha_Límite"
+          value={task.Fecha_Límite}
+          onChange={handleChange}
+        />
+      </div>
 
-    <hr />
+      {editingTaskId ? (
+        <button className="btn btn-primary mt-3" onClick={handleUpdateTask}>Actualizar Tarea</button>
+      ) : (
+        <button className="btn btn-primary mt-3" onClick={handleCreateTask}>Crear Tarea</button>
+      )}
 
-    <h3>Lista de Tareas</h3>
-    <ul>
-      {tasks.length > 0 && tasks.map((task) => (
-        <li key={task.ID_Tarea}>
-          {task.Tarea} - {task.Prioridad} - {task.Estado} - {task.Fecha_Creación} - {task.Fecha_Límite} - Lista: {lists.find(list => list.id === task.ID_Lista)?.name || 'Sin lista'}
-          <button className="btn btn-warning ml-3" onClick={() => handleEditTask(task.ID_Tarea)}>Editar</button>
-          <button className="btn btn-danger ml-3" onClick={() => handleDeleteTask(task.ID_Tarea)}>Borrar</button>
-        </li>
-      ))}
-    </ul>
-  </div>
+      <hr />
+
+      <h3>Lista de Tareas</h3>
+      <ul>
+        {tasks.length > 0 && tasks.map((task) => (
+          <li key={task.ID_Tarea}>
+            {task.Tarea} - {task.Prioridad} - {task.Estado} - {task.Fecha_Creación} - {task.Fecha_Límite} - Lista: {lists.find(list => list.id === task.ID_Lista)?.name || 'Sin lista'}
+            <button className="btn btn-warning ml-3" onClick={() => handleEditTask(task.ID_Tarea)}>Editar</button>
+            <button className="btn btn-danger ml-3" onClick={() => handleDeleteTask(task.ID_Tarea)}>Borrar</button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
-
-export default TaskList
+export default TaskList;

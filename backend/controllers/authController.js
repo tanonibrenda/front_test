@@ -2,6 +2,7 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./db/database.db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+require('dotenv').config(); 
 
 exports.register = (req, res) => {
     const { Nombre, Apellido, Email, Contraseña } = req.body;
@@ -37,7 +38,7 @@ exports.login = (req, res) => {
             res.status(401).json({ error: 'Contraseña incorrecta' });
             return;
         }
-        const token = jwt.sign({ userID: user.ID_Usuarios }, 'secretKey', { expiresIn: '1h' });
+        const token = jwt.sign({ userID: user.ID_Usuarios }, process.env.JWT_SECRET || 'miClaveSecretaSegura12345!', { expiresIn: '1h' });
         res.json({ token, user });
     });
 };

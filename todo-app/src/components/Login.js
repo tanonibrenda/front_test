@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';  // Importar useNavigate
+import { useNavigate } from 'react-router-dom';  
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();  // Inicializar useNavigate
+  const navigate = useNavigate();  
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -17,9 +17,10 @@ const Login = () => {
 
       if (response.data.user) {
         console.log(`Usuario encontrado: ${response.data.user.Nombre}`);
-        localStorage.setItem('token', response.data.token);  // Guardar el token en localStorage
+        localStorage.setItem('token', response.data.token);  
+        console.log(`Token guardado: ${localStorage.getItem('token')}`);
         alert(`Bienvenido ${response.data.user.Nombre}`);
-        navigate('/user-page');  // Redirigir a UserPage después de un inicio de sesión exitoso
+        navigate('/user-page');  
       }
     } catch (error) {
       console.error(error);

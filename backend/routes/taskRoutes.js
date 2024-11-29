@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const taskController = require('../controllers/taskController');
-const authMiddleware = require('../middleware/authMiddleware'); // Importar el middleware de autenticación
+const authMiddleware = require('../middleware/authMiddleware'); 
 
-router.get('/', authMiddleware, taskController.getAllTasks); // Proteger la ruta con el middleware
-router.get('/:id', authMiddleware, taskController.getTaskById); // Proteger la ruta con el middleware
-router.post('/', authMiddleware, taskController.createTask); // Proteger la ruta con el middleware
-router.put('/:id', authMiddleware, taskController.updateTask); // Proteger la ruta con el middleware
-router.delete('/:id', authMiddleware, taskController.deleteTask); // Proteger la ruta con el middleware
+router.get('/', authMiddleware, taskController.getAllTasks);
+router.get('/:id', authMiddleware, taskController.getTaskById);
+router.post('/', authMiddleware, taskController.createTask); 
+router.put('/:id', authMiddleware, taskController.updateTask); 
+router.delete('/:id', authMiddleware, taskController.deleteTask); 
 
 module.exports = router;

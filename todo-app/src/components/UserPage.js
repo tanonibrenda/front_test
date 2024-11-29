@@ -9,17 +9,21 @@ const UserPage = () => {
   useEffect(() => {
     const fetchLists = async () => {
       try {
-        const token = localStorage.getItem('token'); // Obtener el token del almacenamiento local
+        const token = localStorage.getItem('token'); 
         if (!token) {
-          navigate('/login'); // Redirigir a la página de inicio de sesión si no hay token
+          navigate('/login'); 
           return;
         }
+        console.log(`Token: ${token}`);
         const response = await axios.get('http://localhost:5000/api/lists', {
-          headers: { Authorization: `Bearer ${token}` } // Incluir el token en los encabezados de la solicitud
+          headers: { Authorization: `Bearer ${token}` } 
         });
         setLists(response.data.lists || []);
       } catch (error) {
         console.error('Error al obtener listas:', error);
+        if (error.response && error.response.status === 401) {
+          navigate('/login'); 
+        }
       }
     };
     fetchLists();
