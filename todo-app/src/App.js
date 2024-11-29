@@ -10,8 +10,9 @@ import TaskList from './components/TaskList';
 import About from './components/About';
 import Footer from './components/Footer';
 import UserPage from './components/UserPage';
-import MyList from './components/My_List';
-import EditTask from './components/EditTask'; // Importar EditTask
+// import MyList from './components/My_List';
+import EditTask from './components/EditTask'; 
+import ContactPage from './components/ContactPage';
 import './App.css';
 
 function App() {
@@ -36,7 +37,8 @@ function App() {
           <Route path="/task-list" element={<TaskList />} />
           <Route path="/about" element={<About />} />
           <Route path="/user-page" element={<PrivateRoute element={UserPage} />} />
-          <Route path="/my-lists" element={<PrivateRoute element={MyList} />} /> {/* Nueva ruta protegida */}
+          <Route path="/contact" element={<ContactPage />}/>
+          
           <Route path="/edit-task/:taskId" element={<PrivateRoute element={EditTask} />} /> {/* Nueva ruta protegida para editar tareas */}
         </Routes>
         <Footer />
