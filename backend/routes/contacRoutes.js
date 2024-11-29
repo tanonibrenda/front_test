@@ -5,24 +5,21 @@ const router = express.Router();
 router.post('/', (req, res) => {
   const { name, email, message } = req.body;
   
-  // Configuración del transportador de Nodemailer
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
-      user: process.env.EMAIL_USER || 'yourEmail@example.com',
-      pass: process.env.EMAIL_PASS || 'yourEmailPassword'
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
     }
   });
 
-  // Configuración del correo electrónico
   const mailOptions = {
     from: email,
-    to: process.env.RECIPIENT_EMAIL || 'recipient@example.com',
+    to: process.env.RECIPIENT_EMAIL,
     subject: 'Nuevo mensaje de contacto',
     text: `Nombre: ${name}\nCorreo Electrónico: ${email}\nMensaje: ${message}`
   };
 
-  // Enviar correo electrónico
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.error('Error al enviar el correo electrónico:', error);
