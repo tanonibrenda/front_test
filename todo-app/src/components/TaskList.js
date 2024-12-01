@@ -25,7 +25,7 @@ const TaskList = () => {
           navigate('/login');
           return;
         }
-        const response = await axios.get('http://localhost:5000/api/lists', {
+        const response = await axios.get('http://localhost:5000/api/task', {
           headers: { Authorization: `Bearer ${token}` } 
         });
         setLists(response.data.lists || []);

@@ -3,7 +3,7 @@ const db = new sqlite3.Database('./db/database.db');
 
 // Obtener todas las tareas
 exports.getAllTasks = (req, res) => {
-    const sql = 'SELECT * FROM Tareas';
+    const sql = 'SELECT * FROM Tareas WHERE userID = ?';
     console.log('Obteniendo todas las tareas');
     db.all(sql, [], (err, rows) => {
         if (err) {
