@@ -29,7 +29,7 @@ app.use('/api/tasks', authMiddleware, taskRoutes);
 app.use('/api/lists', authMiddleware, listRoutes);
 app.use('/api/contact', authMiddleware, contactRoutes); 
 
-// Ruta temporal para verificar los datos de usuarios
+// Ruta temporal para verificar los datos de usuarios (?)
 app.get('/verify-users', (req, res) => {
     const sql = 'SELECT * FROM Usuarios';
     db.all(sql, [], (err, rows) => {

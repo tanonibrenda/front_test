@@ -85,6 +85,40 @@ const TaskList = () => {
     setTask({ ...task, [name]: value });
   };
 
+  const handleUpdateList = async (id, updatedName) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.put(`http://localhost:5000/api/lists/${id}`, { name: updatedName }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setLists(lists.map((list) => (list.id === id ? response.data : list)));
+    } catch (error) {
+      console.error(`Error al actualizar la lista con ID ${id}:`, error);
+      if (error.response && error.response.status === 401) {
+        navigate('/login');
+      }
+    }
+  };
+  
+  const handleDeleteList = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`http://localhost:5000/api/lists/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setLists(lists.filter((list) => list.id !== id));
+    } catch (error) {
+      console.error(`Error al eliminar la lista con ID ${id}:`, error);
+      if (error.response && error.response.status === 401) {
+        navigate('/login');
+      }
+    }
+  };
+  
+
+
+
+  //
   const handleCreateTask = async () => {
     try {
       const token = localStorage.getItem('token'); 
@@ -174,53 +208,62 @@ const TaskList = () => {
   };
 
   return (
-   
-  <div className="container mt-5">
-    <h2>Crear Lista y Tareas</h2>
+    <div className="container mt-5">
+      <h2>Crear Lista y Tareas</h2>
+  
+      <div className="form-group">
+        <label htmlFor="listName">Nombre de la lista</label>
+        <input
+          type="text"
+          className="form-control"
+          id="listName"
+          name="listName"
+          value={listName}
+          onChange={(e) => setListName(e.target.value)}
+        />
+        <button className="btn btn-primary mt-3" onClick={handleCreateList}>Crear Lista</button>
+      </div>
+      <h3>Listas</h3>
+<ul>
+  {lists.length > 0 && lists.map((list, index) => (
+    <li key={`${list.id}-${index}`}>
+      {list.name}
+      <button className="btn btn-warning ml-3" onClick={() => handleUpdateList(list.id, prompt('Nuevo nombre de la lista:', list.name))}>Editar</button>
+      <button className="btn btn-danger ml-3" onClick={() => handleDeleteList(list.id)}>Borrar</button>
+    </li>
+  ))}
+</ul>
 
-    <div className="form-group">
-      <label htmlFor="listName">Nombre de la lista</label>
-      <input
-        type="text"
-        className="form-control"
-        id="listName"
-        name="listName"
-        value={listName}
-        onChange={(e) => setListName(e.target.value)}
-      />
-      <button className="btn btn-primary mt-3" onClick={handleCreateList}>Crear Lista</button>
-    </div>
-
-    <hr />
-
-    <h3>Crear Nueva Tarea</h3>
-    <div className="form-group">
-      <label htmlFor="ID_Lista">Lista</label>
-      <select
-        className="form-control"
-        id="ID_Lista"
-        name="ID_Lista"
-        value={task.ID_Lista}
-        onChange={handleChange}
-      >
-        <option value="">Seleccione una lista</option>
-        {lists.length > 0 && lists.map((list) => (
-          <option key={list.id} value={list.id}>{list.name}</option>
-        ))}
-      </select>
-    </div>
-    <div className="form-group">
-      <label htmlFor="Tarea">Tarea</label>
-      <input
-        type="text"
-        className="form-control"
-        id="Tarea"
-        name="Tarea"
-        value={task.Tarea}
-        onChange={handleChange}
-      />
-    </div>
-    <div className="form-group">
+      <hr />
+  
+      <h3>Crear Nueva Tarea</h3>
+      <div className="form-group">
+        <label htmlFor="ID_Lista">Lista</label>
+        <select
+          className="form-control"
+          id="ID_Lista"
+          name="ID_Lista"
+          value={task.ID_Lista}
+          onChange={handleChange}
+        >
+          <option value="">Seleccione una lista</option>
+          {lists.length > 0 && lists.map((list) => (
+            <option key={list.id} value={list.id}>{list.name}</option>
+          ))}
+        </select>
+      </div>
+      <div className="form-group">
+        <label htmlFor="Tarea">Tarea</label>
+        <input
+          type="text"
+          className="form-control"
+          id="Tarea"
+          name="Tarea"
+          value={task.Tarea}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="form-group">
         <label htmlFor="Prioridad">Prioridad</label>
         <select
           className="form-control"
@@ -272,28 +315,27 @@ const TaskList = () => {
           onChange={handleChange}
         />
       </div>
-
       {editingTaskId ? (
-        <button className="btn btn-primary mt-3" onClick={handleUpdateTask}>Actualizar Tarea</button>
-      ) : (
-        <button className="btn btn-primary mt-3" onClick={handleCreateTask}>Crear Tarea</button>
-      )}
+      <button className="btn btn-primary mt-3" onClick={handleUpdateTask}>Actualizar Tarea</button>
+    ) : (
+      <button className="btn btn-primary mt-3" onClick={handleCreateTask}>Crear Tarea</button>
+    )}
 
-      <hr />
+    <hr />
+    <h3>Lista de Tareas</h3>
+<ul>
+  {tasks.length > 0 && tasks.map((task, index) => (
+    <li key={`${task.ID_Tarea}-${index}`}>
+      {task.Tarea} - {task.Prioridad} - {task.Estado} - {task.Fecha_Creación} - {task.Fecha_Límite} - Lista: {lists.find(list => list.id === task.ID_Lista)?.name || 'Sin lista'}
+      <button className="btn btn-warning ml-3" onClick={() => handleEditTask(task.ID_Tarea)}>Editar</button>
+      <button className="btn btn-danger ml-3" onClick={() => handleDeleteTask(task.ID_Tarea)}>Borrar</button>
+    </li>
+  ))}
+</ul>
 
-      <h3>Lista de Tareas</h3>
-      {/* //ver acá */}
-      <ul>
-        {tasks.length > 0 && tasks.map((task) => (
-          <li key={task.ID_Tarea}>
-            {task.Tarea} - {task.Prioridad} - {task.Estado} - {task.Fecha_Creación} - {task.Fecha_Límite} - Lista: {lists.find(list => list.id === task.ID_Lista)?.name || 'Sin lista'}
-            <button className="btn btn-warning ml-3" onClick={() => handleEditTask(task.ID_Tarea)}>Editar</button>
-            <button className="btn btn-danger ml-3" onClick={() => handleDeleteTask(task.ID_Tarea)}>Borrar</button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+
+  </div>
+);
 };
 
 export default TaskList;

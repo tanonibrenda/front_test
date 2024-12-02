@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const CreateList = () => {
   const [lista, setLista] = useState({
@@ -12,6 +14,8 @@ const CreateList = () => {
       fechaFin: ''
     }]
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e, index) => {
     const { name, value } = e.target;
@@ -47,12 +51,33 @@ const CreateList = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aquí puedes agregar la lógica para enviar los datos de la lista
-    console.log(lista);
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+  
+      // Enviar datos de la lista al backend
+      await axios.post('http://localhost:5000/api/lists', {
+        name: lista.nombre,
+        tasks: lista.tareas
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+  
+      // Redirigir a la página de listas después de crear la lista
+      navigate('/task-list');
+    } catch (error) {
+      console.error('Error al crear la lista:', error);
+      if (error.response && error.response.status === 401) {
+        navigate('/login');
+      }
+    }
   };
-
+  
   return (
     <div className="container mt-5">
       <h2>Crear Lista</h2>
@@ -158,3 +183,4 @@ const CreateList = () => {
 };
 
 export default CreateList;
+
