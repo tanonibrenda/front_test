@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';  // Importar useNavigate
+import { useNavigate } from 'react-router-dom';  
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -10,7 +10,7 @@ const Register = () => {
     contraseña: '',
     confirmarContraseña: ''
   });
-  const navigate = useNavigate();  // Inicializar useNavigate
+  const navigate = useNavigate();  
 
   const handleChange = (e) => {
     const { name, value } = e.target;

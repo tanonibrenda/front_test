@@ -34,8 +34,9 @@ const createListForUser = (req, res) => {
 const updateList = (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
-    const sql = 'UPDATE Listas SET name = ? WHERE id = ?';
-    db.run(sql, [name, id], function(err) {
+    const userID = req.user.id;
+    const sql = 'UPDATE Listas SET name = ? WHERE id = ? AND userID = ?';
+    db.run(sql, [name, id, userID], function(err) {
         if (err) {
             console.error(`Error al actualizar lista con ID ${id}:`, err.message);
             res.status(500).json({ error: err.message });
@@ -48,8 +49,9 @@ const updateList = (req, res) => {
 // Eliminar una lista por ID
 const deleteList = (req, res) => {
     const { id } = req.params;
-    const sql = 'DELETE FROM Listas WHERE id = ?';
-    db.run(sql, id, function(err) {
+    const userID = req.user.id;
+    const sql = 'DELETE FROM Listas WHERE id = ? AND userID = ?';
+    db.run(sql, [id, userId] , function(err) {
         if (err) {
             console.error(`Error al eliminar lista con ID ${id}:`, err.message);
             res.status(500).json({ error: err.message });

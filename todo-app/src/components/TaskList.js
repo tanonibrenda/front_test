@@ -26,8 +26,10 @@ const TaskList = () => {
           return;
         }
         //
-        const response = await axios.get('http://localhost:5000/api/task', {
+        // const response = await axios.get('http://localhost:5000/api/task', {
+          const response = await axios.get('http://localhost:5000/api/lists', {
           headers: { Authorization: `Bearer ${token}` } 
+
         });
         setLists(response.data.lists || []);
       } catch (error) {
@@ -280,6 +282,7 @@ const TaskList = () => {
       <hr />
 
       <h3>Lista de Tareas</h3>
+      {/* //ver acá */}
       <ul>
         {tasks.length > 0 && tasks.map((task) => (
           <li key={task.ID_Tarea}>

@@ -38,6 +38,8 @@ db.serialize(() => {
         Fecha_Creación DATE,
         Fecha_Límite DATE,
         FOREIGN KEY (ID_Lista) REFERENCES Listas(id)
+        userID INTEGER,
+        FOREIGN KEY (userID) REFERENCES Usuarios(ID_Usuarios)
     )`, (err) => {
         if (err) {
             console.error('Error al crear la tabla Tareas:', err.message);

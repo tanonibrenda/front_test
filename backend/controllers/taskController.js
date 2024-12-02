@@ -5,7 +5,8 @@ const db = new sqlite3.Database('./db/database.db');
 exports.getAllTasks = (req, res) => {
     const sql = 'SELECT * FROM Tareas WHERE userID = ?';
     console.log('Obteniendo todas las tareas');
-    db.all(sql, [], (err, rows) => {
+    //array
+    db.all(sql, [req.user.userID], (err, rows) => {
         if (err) {
             console.error('Error al obtener tareas:', err.message);
             res.status(500).json({ error: err.message });
@@ -15,12 +16,15 @@ exports.getAllTasks = (req, res) => {
     });
 };
 
+
 // Obtener tarea por ID
 exports.getTaskById = (req, res) => {
     const { id } = req.params;
-    const sql = 'SELECT * FROM Tareas WHERE ID_Tarea = ?';
+    const userID = req.user.userID;
+    const sql = 'SELECT * FROM Tareas WHERE ID_Tarea = ? AND userID';
     console.log(`Obteniendo tarea con ID: ${id}`);
-    db.get(sql, [id], (err, row) => {
+    //me falto el userID
+    db.get(sql, [id, userID], (err, row) => {
         if (err) {
             console.error(`Error al obtener tarea con ID ${id}:`, err.message);
             res.status(500).json({ error: err.message });
@@ -33,6 +37,9 @@ exports.getTaskById = (req, res) => {
 // Crear nueva tarea
 exports.createTask = (req, res) => {
     const { ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite } = req.body;
+   
+    //const userID = req.res.userID; 
+    const userID = req.user.userID;
     const sql = 'INSERT INTO Tareas (ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite) VALUES (?, ?, ?, ?, ?, ?)';
     console.log('Creando nueva tarea:', { ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite });
     db.run(sql, [ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite], function(err) {
@@ -50,6 +57,7 @@ exports.createTask = (req, res) => {
                 Estado,
                 Fecha_Creación,
                 Fecha_Límite,
+                userID,
                 id: this.lastID
             }
         });
@@ -60,9 +68,10 @@ exports.createTask = (req, res) => {
 exports.updateTask = (req, res) => {
     const { id } = req.params;
     const { ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite } = req.body;
+    const userID = req.user.userID;
     const sql = 'UPDATE Tareas SET Tarea = ?, Prioridad = ?, Estado = ?, Fecha_Creación = ?, Fecha_Límite = ? WHERE ID_Tarea = ?';
     console.log(`Actualizando tarea con ID ${id}:`, { Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite });
-    db.run(sql, [Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite, id], function(err) {
+    db.run(sql, [ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite, id], function(err) {
         if (err) {
             console.error(`Error al actualizar tarea con ID ${id}:`, err.message);
             res.status(500).json({ error: err.message });
@@ -76,6 +85,7 @@ exports.updateTask = (req, res) => {
                 Estado,
                 Fecha_Creación,
                 Fecha_Límite,
+                userID,
                 id
             }
         });
@@ -85,9 +95,11 @@ exports.updateTask = (req, res) => {
 // Eliminar tarea por ID
 exports.deleteTask = (req, res) => {
     const { id } = req.params;
-    const sql = 'DELETE FROM Tareas WHERE ID_Tarea = ?';
+    const userID = req.user.userID;
+    const sql = 'DELETE FROM Tareas WHERE ID_Tarea = ? AND userID = ?';
     console.log(`Eliminando tarea con ID: ${id}`);
-    db.run(sql, id, function(err) {
+    //sql, user, function
+    db.run(sql, [id, userID] , function(err) {
         if (err) {
             console.error(`Error al eliminar tarea con ID ${id}:`, err.message);
             res.status(500).json({ error: err.message });
