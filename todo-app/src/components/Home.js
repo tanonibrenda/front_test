@@ -2,7 +2,8 @@ import React from 'react';
 
 const Home = () => (
   <main>
-    <section className="hero">
+    <section className="py-5">
+    <div class="container px-4 px-lg-5 my-5">
       <div className="container">
         <div className="row align-items-center">
           {/* Columna izquierda con la imagen */}
@@ -27,6 +28,7 @@ const Home = () => (
            
           </div>
         </div>
+      </div>
       </div>
     </section>
   </main>
