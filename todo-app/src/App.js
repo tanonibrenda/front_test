@@ -39,7 +39,7 @@ function App() {
           <Route path="/user-page" element={<PrivateRoute element={UserPage} />} />
           <Route path="/contact" element={<ContactPage />}/>
           
-          <Route path="/edit-task/:taskId" element={<PrivateRoute element={EditTask} />} /> {/* Nueva ruta protegida para editar tareas */}
+          <Route path="/edit-task/:taskId" element={<PrivateRoute element={EditTask} />} /> 
         </Routes>
         <Footer />
       </div>
