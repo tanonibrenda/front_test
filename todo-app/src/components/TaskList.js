@@ -32,6 +32,7 @@ const TaskList = () => {
 
         });
         setLists(response.data.lists || []);
+        console.log('Lists:', response.data.lists);
       } catch (error) {
         console.error('Error al cargar listas:', error);
         if (error.response && error.response.status === 401){
@@ -54,6 +55,7 @@ const TaskList = () => {
           headers: { Authorization: `Bearer ${token}` } 
         });
         setTasks(response.data.tasks || []);
+        console.log('Tasks:', response.data.tasks);
       } catch (error) {
         console.error('Error al cargar tareas:', error);
         if (error.response && error.response.status === 401){
@@ -326,7 +328,8 @@ const TaskList = () => {
 <ul>
   {tasks.length > 0 && tasks.map((task, index) => (
     <li key={`${task.ID_Tarea}-${index}`}>
-      {task.Tarea} - {task.Prioridad} - {task.Estado} - {task.Fecha_Creación} - {task.Fecha_Límite} - Lista: {lists.find(list => list.id === task.ID_Lista)?.name || 'Sin lista'}
+      {task.Tarea} - {task.Prioridad} - {task.Estado} - {task.Fecha_Creación} - {task.Fecha_Límite} - Lista: {lists.find(list => Number(list.id) === Number(task.ID_Lista))?.name || 'Sin lista'}
+
       <button className="btn btn-warning ml-3" onClick={() => handleEditTask(task.ID_Tarea)}>Editar</button>
       <button className="btn btn-danger ml-3" onClick={() => handleDeleteTask(task.ID_Tarea)}>Borrar</button>
     </li>

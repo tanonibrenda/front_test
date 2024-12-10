@@ -38,7 +38,7 @@ exports.getTaskById = (req, res) => {
 exports.createTask = (req, res) => {
     const { ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite } = req.body;
    
-    //const userID = req.res.userID; 
+    
     const userID = req.user.userID;
     const sql = 'INSERT INTO Tareas (ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite) VALUES (?, ?, ?, ?, ?, ?)';
     console.log('Creando nueva tarea:', { ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite });
