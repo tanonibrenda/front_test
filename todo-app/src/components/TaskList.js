@@ -210,135 +210,236 @@ const TaskList = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Crear Lista y Tareas</h2>
+    <div
+      className="container-fluid vh-100 d-flex justify-content-center align-items-center"
+      role="main"
+      aria-label="Formulario de gestión de tareas y listas"
+    >
+      <div
+        className="card shadow-lg"
+        style={{
+          width: '80%',
+          maxWidth: '1000px', 
+          height: '80%',
+          overflowY: 'auto', 
+        }}
+      >
+        <div className="card-body">
+          <h1 className="text-center text-primary mb-4">Crear Lista y Tareas</h1>
+          
+          {/* Formulario para crear listas */}
+          <form aria-labelledby="form-crear-lista">
+            <div className="form-group">
+              <label htmlFor="listName" className="form-label">
+                Nombre de la lista
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="listName"
+                name="listName"
+                value={listName}
+                onChange={(e) => setListName(e.target.value)}
+                aria-required="true"
+              />
+              <button
+                type="button"
+                className="btn btn-primary mt-3"
+                onClick={handleCreateList}
+              >
+                Crear Lista
+              </button>
+            </div>
+          </form>
   
-      <div className="form-group">
-        <label htmlFor="listName">Nombre de la lista</label>
-        <input
-          type="text"
-          className="form-control"
-          id="listName"
-          name="listName"
-          value={listName}
-          onChange={(e) => setListName(e.target.value)}
-        />
-        <button className="btn btn-primary mt-3" onClick={handleCreateList}>Crear Lista</button>
-      </div>
-      <h3>Listas</h3>
-<ul>
-  {lists.length > 0 && lists.map((list, index) => (
-    <li key={`${list.id}-${index}`}>
-      {list.name}
-      <button className="btn btn-warning ml-3" onClick={() => handleUpdateList(list.id, prompt('Nuevo nombre de la lista:', list.name))}>Editar</button>
-      <button className="btn btn-danger ml-3" onClick={() => handleDeleteList(list.id)}>Borrar</button>
-    </li>
-  ))}
-</ul>
-
-      <hr />
+          <hr />
   
-      <h3>Crear Nueva Tarea</h3>
-      <div className="form-group">
-        <label htmlFor="ID_Lista">Lista</label>
-        <select
-          className="form-control"
-          id="ID_Lista"
-          name="ID_Lista"
-          value={task.ID_Lista}
-          onChange={handleChange}
-        >
-          <option value="">Seleccione una lista</option>
-          {lists.length > 0 && lists.map((list) => (
-            <option key={list.id} value={list.id}>{list.name}</option>
-          ))}
-        </select>
+          {/* Listado de listas */}
+          <section aria-labelledby="listas">
+            <h3 id="listas">Listas</h3>
+            <ul className="list-unstyled">
+              {lists.length > 0 &&
+                lists.map((list, index) => (
+                  <li key={`${list.id}-${index}`} className="mb-2">
+                    <span>{list.name}</span>
+                    <button
+                      className="btn btn-warning ml-3"
+                      onClick={() =>
+                        handleUpdateList(list.id, prompt('Nuevo nombre de la lista:', list.name))
+                      }
+                      aria-label={`Editar lista ${list.name}`}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="btn btn-danger ml-3"
+                      onClick={() => handleDeleteList(list.id)}
+                      aria-label={`Eliminar lista ${list.name}`}
+                    >
+                      Borrar
+                    </button>
+                  </li>
+                ))}
+            </ul>
+          </section>
+  
+          <hr />
+  
+          {/* Formulario para crear tareas */}
+          <form aria-labelledby="form-crear-tarea">
+            <h3 id="form-crear-tarea">Crear Nueva Tarea</h3>
+            <div className="form-group">
+              <label htmlFor="ID_Lista" className="form-label">
+                Lista
+              </label>
+              <select
+                className="form-control"
+                id="ID_Lista"
+                name="ID_Lista"
+                value={task.ID_Lista}
+                onChange={handleChange}
+                aria-required="true"
+              >
+                <option value="">Seleccione una lista</option>
+                {lists.length > 0 &&
+                  lists.map((list) => (
+                    <option key={list.id} value={list.id}>
+                      {list.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="Tarea" className="form-label">
+                Tarea
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="Tarea"
+                name="Tarea"
+                value={task.Tarea}
+                onChange={handleChange}
+                aria-required="true"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="Prioridad" className="form-label">
+                Prioridad
+              </label>
+              <select
+                className="form-control"
+                id="Prioridad"
+                name="Prioridad"
+                value={task.Prioridad}
+                onChange={handleChange}
+                aria-required="true"
+              >
+                <option value="Hacer">Hacer</option>
+                <option value="Planificar">Planificar</option>
+                <option value="Delegar">Delegar</option>
+                <option value="Ignorar">Ignorar</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="Estado" className="form-label">
+                Estado
+              </label>
+              <select
+                className="form-control"
+                id="Estado"
+                name="Estado"
+                value={task.Estado}
+                onChange={handleChange}
+                aria-required="true"
+              >
+                <option value="No Iniciado">No Iniciado</option>
+                <option value="En Curso">En Curso</option>
+                <option value="Bloqueado">Bloqueado</option>
+                <option value="Completado">Completado</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="Fecha_Creación" className="form-label">
+                Fecha de Creación
+              </label>
+              <input
+                type="date"
+                className="form-control"
+                id="Fecha_Creación"
+                name="Fecha_Creación"
+                value={task.Fecha_Creación}
+                onChange={handleChange}
+                aria-required="true"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="Fecha_Límite" className="form-label">
+                Fecha Límite
+              </label>
+              <input
+                type="date"
+                className="form-control"
+                id="Fecha_Límite"
+                name="Fecha_Límite"
+                value={task.Fecha_Límite}
+                onChange={handleChange}
+                aria-required="true"
+              />
+            </div>
+  
+            {editingTaskId ? (
+              <button
+                type="button"
+                className="btn btn-primary mt-3"
+                onClick={handleUpdateTask}
+              >
+                Actualizar Tarea
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="btn btn-primary mt-3"
+                onClick={handleCreateTask}
+              >
+                Crear Tarea
+              </button>
+            )}
+          </form>
+  
+          <hr />
+  
+          {/* Lista de tareas */}
+          <section aria-labelledby="lista-tareas">
+            <h3 id="lista-tareas">Lista de Tareas</h3>
+            <ul className="list-unstyled">
+              {tasks.length > 0 &&
+                tasks.map((task, index) => (
+                  <li key={`${task.ID_Tarea}-${index}`} className="mb-2">
+                    {task.Tarea} - {task.Prioridad} - {task.Estado} - {task.Fecha_Creación} -{' '}
+                    {task.Fecha_Límite} - Lista:{' '}
+                    {lists.find((list) => Number(list.id) === Number(task.ID_Lista))?.name || 'Sin lista'}
+                    <button
+                      className="btn btn-warning ml-3"
+                      onClick={() => handleEditTask(task.ID_Tarea)}
+                      aria-label={`Editar tarea ${task.Tarea}`}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="btn btn-danger ml-3"
+                      onClick={() => handleDeleteTask(task.ID_Tarea)}
+                      aria-label={`Eliminar tarea ${task.Tarea}`}
+                    >
+                      Borrar
+                    </button>
+                  </li>
+                ))}
+            </ul>
+          </section>
+        </div>
       </div>
-      <div className="form-group">
-        <label htmlFor="Tarea">Tarea</label>
-        <input
-          type="text"
-          className="form-control"
-          id="Tarea"
-          name="Tarea"
-          value={task.Tarea}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="Prioridad">Prioridad</label>
-        <select
-          className="form-control"
-          id="Prioridad"
-          name="Prioridad"
-          value={task.Prioridad}
-          onChange={handleChange}
-        >
-          <option value="Hacer">Hacer</option>
-          <option value="Planificar">Planificar</option>
-          <option value="Delegar">Delegar</option>
-          <option value="Ignorar">Ignorar</option>
-        </select>
-      </div>
-      <div className="form-group">
-        <label htmlFor="Estado">Estado</label>
-        <select
-          className="form-control"
-          id="Estado"
-          name="Estado"
-          value={task.Estado}
-          onChange={handleChange}
-        >
-          <option value="No Iniciado">No Iniciado</option>
-          <option value="En Curso">En Curso</option>
-          <option value="Bloqueado">Bloqueado</option>
-          <option value="Completado">Completado</option>
-        </select>
-      </div>
-      <div className="form-group">
-        <label htmlFor="Fecha_Creación">Fecha de Creación</label>
-        <input
-          type="date"
-          className="form-control"
-          id="Fecha_Creación"
-          name="Fecha_Creación"
-          value={task.Fecha_Creación}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="Fecha_Límite">Fecha Límite</label>
-        <input
-          type="date"
-          className="form-control"
-          id="Fecha_Límite"
-          name="Fecha_Límite"
-          value={task.Fecha_Límite}
-          onChange={handleChange}
-        />
-      </div>
-      {editingTaskId ? (
-      <button className="btn btn-primary mt-3" onClick={handleUpdateTask}>Actualizar Tarea</button>
-    ) : (
-      <button className="btn btn-primary mt-3" onClick={handleCreateTask}>Crear Tarea</button>
-    )}
-
-    <hr />
-    <h3>Lista de Tareas</h3>
-<ul>
-  {tasks.length > 0 && tasks.map((task, index) => (
-    <li key={`${task.ID_Tarea}-${index}`}>
-      {task.Tarea} - {task.Prioridad} - {task.Estado} - {task.Fecha_Creación} - {task.Fecha_Límite} - Lista: {lists.find(list => Number(list.id) === Number(task.ID_Lista))?.name || 'Sin lista'}
-
-      <button className="btn btn-warning ml-3" onClick={() => handleEditTask(task.ID_Tarea)}>Editar</button>
-      <button className="btn btn-danger ml-3" onClick={() => handleDeleteTask(task.ID_Tarea)}>Borrar</button>
-    </li>
-  ))}
-</ul>
-
-
-  </div>
-);
-};
-
+    </div>
+  );
+}
 export default TaskList;

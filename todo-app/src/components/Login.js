@@ -34,7 +34,8 @@ const Login = () => {
         <div className="col-md-6 col-lg-4">
           <div className="card shadow-sm">
             <div className="card-body">
-              <h2 className="text-center text-primary mb-4">Iniciar Sesión</h2>
+            <h1 className="text-center text-primary mb-4">Iniciar Sesión</h1>
+              {/* <h2 className="text-center text-primary mb-4">Iniciar Sesión</h2> */}
               <form onSubmit={handleLogin}>
                 {/* Email Field */}
                 <div className="form-group mb-3">

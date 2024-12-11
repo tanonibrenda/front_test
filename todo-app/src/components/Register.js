@@ -37,7 +37,7 @@ const Register = () => {
 
       console.log('Datos del usuario registrados:', response.data);
       alert('Registro exitoso');
-      navigate('/user-page');  // Redirigir a UserPage después de un registro exitoso
+      navigate('/user-page');  
     } catch (error) {
       console.error('Error al registrar usuario:', error);
       alert('Hubo un error en el registro');
@@ -46,10 +46,14 @@ const Register = () => {
 
   return (
     <div className="container mt-5">
-      <h2>Formulario de Registro</h2>
+      <div className="row justify-content-center">
+      <div className="col-md-6 col-lg-4">
+      <div className="card shadow-sm">
+      <div className="card-body">
+      <h1 className="text-center text-primary mb-4">Formulario de Registro</h1>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="nombre">Nombre</label>
+          <label htmlFor="nombre" className="form-label" placeholder="Ingrese su nombre">Nombre</label>
           <input
             type="text"
             className="form-control"
@@ -58,6 +62,7 @@ const Register = () => {
             value={form.nombre}
             onChange={handleChange}
             required
+            placeholder='Ingresa tu nombre'
           />
         </div>
         <div className="form-group">
@@ -70,6 +75,7 @@ const Register = () => {
             value={form.apellido}
             onChange={handleChange}
             required
+            placeholder='Ingresa tu apellido'
           />
         </div>
         <div className="form-group">
@@ -82,6 +88,7 @@ const Register = () => {
             value={form.email}
             onChange={handleChange}
             required
+            placeholder='Ingresa tu email'
           />
         </div>
         <div className="form-group">
@@ -94,6 +101,7 @@ const Register = () => {
             value={form.contraseña}
             onChange={handleChange}
             required
+            placeholder='Ingresa tu contraseña'
           />
         </div>
         <div className="form-group">
@@ -106,10 +114,17 @@ const Register = () => {
             value={form.confirmarContraseña}
             onChange={handleChange}
             required
+            placeholder='Ingresa nuevamente tu contraseña'
           />
         </div>
-        <button type="submit" className="btn btn-primary">Registrarse</button>
+        <div className="d-grid">
+        <button type="submit" className="btn btn-primary mt-4 py-2">Registrarse</button>
+        </div>
       </form>
+      </div>
+      </div>
+      </div>
+      </div>
     </div>
   );
 };
