@@ -102,23 +102,45 @@ const TaskList = () => {
     }
   };
   
+  // const handleDeleteList = async (id) => {
+  //   try {
+  //     const token = localStorage.getItem('token');
+  //     await axios.delete(`http://localhost:5000/api/lists/${id}`, {
+  //       headers: { Authorization: `Bearer ${token}` }
+  //     });
+  //     setLists(lists.filter((list) => list.id !== id));
+  //   } catch (error) {
+  //     console.error(`Error al eliminar la lista con ID ${id}:`, error);
+  //     if (error.response && error.response.status === 401) {
+  //       navigate('/login');
+  //     }
+  //   }
+  // };
+  
+
   const handleDeleteList = async (id) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token'); // Obtener el token del almacenamiento local
+      if (!token) {
+        navigate('/login'); // Redirige si no hay token
+        return;
+      }
+  
+      // Realizar la solicitud DELETE con el token en los headers
       await axios.delete(`http://localhost:5000/api/lists/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
+  
+      // Actualizar el estado local después de borrar
       setLists(lists.filter((list) => list.id !== id));
     } catch (error) {
       console.error(`Error al eliminar la lista con ID ${id}:`, error);
       if (error.response && error.response.status === 401) {
-        navigate('/login');
+        navigate('/login'); // Redirige si el token es inválido
       }
     }
   };
   
-
-
 
   //
   const handleCreateTask = async () => {
@@ -241,10 +263,11 @@ const TaskList = () => {
                 value={listName}
                 onChange={(e) => setListName(e.target.value)}
                 aria-required="true"
+                placeholder='Ingrese el nombre de su lista'
               />
               <button
                 type="button"
-                className="btn btn-primary mt-3"
+                className="btn btn-primary py-2 fw-bold mt-2 item-center"
                 onClick={handleCreateList}
               >
                 Crear Lista

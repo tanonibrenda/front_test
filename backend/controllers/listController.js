@@ -51,7 +51,7 @@ const deleteList = (req, res) => {
     const { id } = req.params;
     const userID = req.user.id;
     const sql = 'DELETE FROM Listas WHERE id = ? AND userID = ?';
-    db.run(sql, [id, userId] , function(err) {
+    db.run(sql, [id, userID] , function(err) {
         if (err) {
             console.error(`Error al eliminar lista con ID ${id}:`, err.message);
             res.status(500).json({ error: err.message });
