@@ -185,6 +185,10 @@ const TaskList = () => {
         Fecha_Límite: taskToEdit.Fecha_Límite || ''
       });
       setEditingTaskId(id);
+      setTimeout(() => {
+        console.log('Editing Task ID:', id);
+      }, 0);
+
     }
   };
 
@@ -218,6 +222,7 @@ const TaskList = () => {
       }
     }
   };
+  
 
   const handleDeleteTask = async (id) => {
     try {
@@ -230,7 +235,18 @@ const TaskList = () => {
       console.error('Error al eliminar tarea:', error);
     }
   };
-
+  const resetTaskForm = () => {
+    setTask({
+      ID_Lista: '',
+      Tarea: '',
+      Prioridad: 'Hacer',
+      Estado: 'No Iniciado',
+      Fecha_Creación: '',
+      Fecha_Límite: ''
+    });
+    setEditingTaskId(null);
+  };
+  
   return (
     <div
       className="container-fluid vh-100 d-flex justify-content-center align-items-center"
@@ -310,7 +326,8 @@ const TaskList = () => {
   
           {/* Formulario para crear tareas */}
           <form aria-labelledby="form-crear-tarea">
-            <h3 id="form-crear-tarea">Crear Nueva Tarea</h3>
+            {/* <h3 id="form-crear-tarea">Crear Nueva Tarea</h3> */}
+            <h3>{editingTaskId ? 'Editar Tarea' : 'Crear Nueva Tarea'}</h3>
             <div className="form-group">
               <label htmlFor="ID_Lista" className="form-label">
                 Lista
@@ -410,24 +427,35 @@ const TaskList = () => {
                 aria-required="true"
               />
             </div>
-  
+                  
             {editingTaskId ? (
-              <button
-                type="button"
-                className="btn btn-primary mt-3"
-                onClick={handleUpdateTask}
-              >
-                Actualizar Tarea
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="btn btn-primary mt-3"
-                onClick={handleCreateTask}
-              >
-                Crear Tarea
-              </button>
-            )}
+  <>
+    <button
+      type="button"
+      className="btn btn-success mt-3 me-2"
+      onClick={handleUpdateTask}
+    >
+      Guardar Cambios
+    </button>
+    <button
+      type="button"
+      className="btn btn-secondary mt-3"
+      onClick={resetTaskForm}
+    >
+      Cancelar Cambios
+    </button>
+  </>
+) : (
+  <button
+    type="button"
+    className="btn btn-primary mt-3"
+    onClick={handleCreateTask}
+  >
+    Crear Tarea
+  </button>
+)}
+
+            
           </form>
   
           <hr />
