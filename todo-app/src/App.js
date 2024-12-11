@@ -19,8 +19,12 @@ function App() {
   const nombre = "Juan";
   const apellido = "Pérez";
 
+  console.log('App.js - Nombre:', nombre);
+  console.log('App.js - Apellido:', apellido);
+
   const PrivateRoute = ({ element: Component, ...rest }) => {
     const token = localStorage.getItem('token');
+    console.log('App.js - Token:', token);
     return token ? <Component {...rest} /> : <Navigate to="/login" />;
   };
 

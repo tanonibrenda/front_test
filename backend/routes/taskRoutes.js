@@ -1,17 +1,35 @@
 const express = require('express');
 const router = express.Router();
-
-const { getAllTasks, getTaskById, createTask, updateTask, deleteTask } = require('../controllers/taskController');
+const taskController = require('../controllers/taskController');
 const authMiddleware = require('../middleware/authMiddleware'); 
 
-router.get('/', authMiddleware, taskController.getAllTasks);
-router.get('/api/tasks', authMiddleware, getAllTasks);
-router.get('/api/tasks/:id', authMiddleware, getTaskById);
-router.get('/:id', authMiddleware, taskController.getTaskById);
-router.post('/', authMiddleware, taskController.createTask); 
-router.post('/api/tasks', authMiddleware, createTask); 
-router.put('/api/tasks/:id', authMiddleware, updateTask);
-router.delete('/:id', authMiddleware, taskController.deleteTask); 
-router.delete('/api/tasks/:id', authMiddleware, deleteTask);
+console.log('TaskRoutes.js - Iniciando configuración de rutas para tareas...');
+
+router.get('/', authMiddleware, (req, res, next) => {
+    console.log('TaskRoutes.js - GET / - Obtener todas las tareas');
+    next();
+}, taskController.getAllTasks); 
+
+router.get('/:id', authMiddleware, (req, res, next) => {
+    console.log(`TaskRoutes.js - GET /${req.params.id} - Obtener tarea con ID ${req.params.id}`);
+    next();
+}, taskController.getTaskById); 
+
+router.post('/', authMiddleware, (req, res, next) => {
+    console.log('TaskRoutes.js - POST / - Crear una nueva tarea');
+    next();
+}, taskController.createTask); 
+
+router.put('/:id', authMiddleware, (req, res, next) => {
+    console.log(`TaskRoutes.js - PUT /${req.params.id} - Actualizar tarea con ID ${req.params.id}`);
+    next();
+}, taskController.updateTask); 
+
+router.delete('/:id', authMiddleware, (req, res, next) => {
+    console.log(`TaskRoutes.js - DELETE /${req.params.id} - Eliminar tarea con ID ${req.params.id}`);
+    next();
+}, taskController.deleteTask); 
+
+console.log('TaskRoutes.js - Configuración de rutas completada.');
 
 module.exports = router;

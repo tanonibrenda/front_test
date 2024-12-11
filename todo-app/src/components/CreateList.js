@@ -19,15 +19,18 @@ const CreateList = () => {
 
   const handleChange = (e, index) => {
     const { name, value } = e.target;
+    console.log(`CreateList.js - handleChange - name: ${name}, value: ${value}, index: ${index}`);
     const tareas = [...lista.tareas];
     tareas[index][name] = value;
     setLista({
       ...lista,
       tareas
     });
+    console.log('CreateList.js - handleChange - lista actualizada:', lista);
   };
 
   const handleAddTask = () => {
+    console.log('CreateList.js - handleAddTask - Añadiendo nueva tarea');
     setLista({
       ...lista,
       tareas: [
@@ -42,37 +45,45 @@ const CreateList = () => {
         }
       ]
     });
+    console.log('CreateList.js - handleAddTask - tareas actualizadas:', lista.tareas);
   };
 
   const handleChangeNombre = (e) => {
+    const { value } = e.target;
+    console.log(`CreateList.js - handleChangeNombre - nombre: ${value}`);
     setLista({
       ...lista,
-      nombre: e.target.value
+      nombre: value
     });
+    console.log('CreateList.js - handleChangeNombre - lista actualizada:', lista);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('CreateList.js - handleSubmit - Enviando datos de la lista:', lista);
     try {
       const token = localStorage.getItem('token');
       if (!token) {
+        console.warn('CreateList.js - handleSubmit - No se encontró token, redirigiendo a login');
         navigate('/login');
         return;
       }
-  
+
       // Enviar datos de la lista al backend
-      await axios.post('http://localhost:5000/api/lists', {
+      const response = await axios.post('http://localhost:5000/api/lists', {
         name: lista.nombre,
         tasks: lista.tareas
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-  
+      console.log('CreateList.js - handleSubmit - Lista creada exitosamente:', response.data);
+
       // Redirigir a la página de listas después de crear la lista
       navigate('/task-list');
     } catch (error) {
-      console.error('Error al crear la lista:', error);
+      console.error('CreateList.js - handleSubmit - Error al crear la lista:', error);
       if (error.response && error.response.status === 401) {
+        console.warn('CreateList.js - handleSubmit - No autorizado, redirigiendo a login');
         navigate('/login');
       }
     }
@@ -183,4 +194,3 @@ const CreateList = () => {
 };
 
 export default CreateList;
-

@@ -17,13 +17,18 @@ const EditTask = () => {
   useEffect(() => {
     const fetchTask = async () => {
       try {
+        console.log('EditTask.js - Obteniendo token de localStorage');
         const token = localStorage.getItem('token');
+        console.log('EditTask.js - Token obtenido:', token);
+
+        console.log(`EditTask.js - Fetching task with ID: ${taskId}`);
         const response = await axios.get(`http://localhost:5000/api/tasks/${taskId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
+        console.log('EditTask.js - Response data:', response.data);
         setTask(response.data.task || {});
       } catch (error) {
-        console.error('Error al obtener la tarea:', error);
+        console.error('EditTask.js - Error al obtener la tarea:', error);
       }
     };
     fetchTask();
@@ -31,19 +36,24 @@ const EditTask = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log(`EditTask.js - handleChange - name: ${name}, value: ${value}`);
     setTask({ ...task, [name]: value });
   };
 
   const handleUpdateTask = async (e) => {
     e.preventDefault();
     try {
+      console.log('EditTask.js - handleUpdateTask - Enviando actualización de tarea');
       const token = localStorage.getItem('token');
+      console.log('EditTask.js - Token obtenido para la actualización:', token);
+
       await axios.put(`http://localhost:5000/api/tasks/${taskId}`, task, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      console.log('EditTask.js - Tarea actualizada con éxito');
       navigate('/my-lists');
     } catch (error) {
-      console.error('Error al actualizar la tarea:', error);
+      console.error('EditTask.js - Error al actualizar la tarea:', error);
     }
   };
 

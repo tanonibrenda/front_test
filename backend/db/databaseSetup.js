@@ -2,20 +2,20 @@ const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const path = require('path');
 
-// ver base de datos
+// Verificar base de datos
 const dbPath = path.resolve(__dirname, './db/database.db');
 const dbDir = path.dirname(dbPath);
 
 if (!fs.existsSync(dbDir)) {
-  console.log(`El directorio ${dbDir} no existe. Creándolo...`);
+  console.log(`DatabaseSetup.js - El directorio ${dbDir} no existe. Creándolo...`);
   fs.mkdirSync(dbDir, { recursive: true });
 }
 
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
-    console.error('Error al abrir la base de datos:', err.message);
+    console.error('DatabaseSetup.js - Error al abrir la base de datos:', err.message);
   } else {
-    console.log('Base de datos abierta correctamente en:', dbPath);
+    console.log('DatabaseSetup.js - Base de datos abierta correctamente en:', dbPath);
   }
 });
 
@@ -28,9 +28,9 @@ db.serialize(() => {
         Contraseña TEXT
     )`, (err) => {
         if (err) {
-            console.error('Error al crear la tabla Usuarios:', err.message);
+            console.error('DatabaseSetup.js - Error al crear la tabla Usuarios:', err.message);
         } else {
-            console.log('Tabla Usuarios creada o ya existe.');
+            console.log('DatabaseSetup.js - Tabla Usuarios creada o ya existe.');
         }
     });
 
@@ -41,9 +41,9 @@ db.serialize(() => {
         FOREIGN KEY (userID) REFERENCES Usuarios(ID_Usuarios)
     )`, (err) => {
         if (err) {
-            console.error('Error al crear la tabla Listas:', err.message);
+            console.error('DatabaseSetup.js - Error al crear la tabla Listas:', err.message);
         } else {
-            console.log('Tabla Listas creada o ya existe.');
+            console.log('DatabaseSetup.js - Tabla Listas creada o ya existe.');
         }
     });
 
@@ -60,11 +60,12 @@ db.serialize(() => {
         FOREIGN KEY (userID) REFERENCES Usuarios(ID_Usuarios)
     )`, (err) => {
         if (err) {
-            console.error('Error al crear la tabla Tareas:', err.message);
+            console.error('DatabaseSetup.js - Error al crear la tabla Tareas:', err.message);
         } else {
-            console.log('Tabla Tareas creada o ya existe.');
+            console.log('DatabaseSetup.js - Tabla Tareas creada o ya existe.');
         }
     });
 });
 
 module.exports = db;
+

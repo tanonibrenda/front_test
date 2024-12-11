@@ -9,21 +9,27 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    console.log('Login.js - handleLogin - Inicio del proceso de login');
+    console.log('Login.js - Email:', email);
+    console.log('Login.js - Contraseña:', password);
+
     try {
       const response = await axios.post('http://localhost:5000/api/users/login', {
         Email: email,
         Contraseña: password,
       });
 
+      console.log('Login.js - Respuesta del servidor:', response.data);
+
       if (response.data.user) {
-        console.log(`Usuario encontrado: ${response.data.user.Nombre}`);
+        console.log(`Login.js - Usuario encontrado: ${response.data.user.Nombre}`);
         localStorage.setItem('token', response.data.token);
-        console.log(`Token guardado: ${localStorage.getItem('token')}`);
+        console.log(`Login.js - Token guardado en localStorage: ${localStorage.getItem('token')}`);
         alert(`Bienvenido ${response.data.user.Nombre}`);
         navigate('/user-page');
       }
     } catch (error) {
-      console.error(error);
+      console.error('Login.js - Error en el proceso de login:', error);
       alert('Usuario no encontrado o contraseña incorrecta');
     }
   };
@@ -34,8 +40,7 @@ const Login = () => {
         <div className="col-md-6 col-lg-4">
           <div className="card shadow-sm">
             <div className="card-body">
-            <h1 className="text-center text-primary mb-4">Iniciar Sesión</h1>
-              {/* <h2 className="text-center text-primary mb-4">Iniciar Sesión</h2> */}
+              <h1 className="text-center text-primary mb-4">Iniciar Sesión</h1>
               <form onSubmit={handleLogin}>
                 {/* Email Field */}
                 <div className="form-group mb-3">
@@ -48,7 +53,10 @@ const Login = () => {
                     id="email"
                     placeholder="mimail@email.com"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      console.log('Login.js - Cambio en el campo email:', e.target.value);
+                      setEmail(e.target.value);
+                    }}
                     required
                   />
                 </div>
@@ -64,7 +72,10 @@ const Login = () => {
                     id="password"
                     placeholder="••••••••"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                      console.log('Login.js - Cambio en el campo contraseña:', e.target.value);
+                      setPassword(e.target.value);
+                    }}
                     required
                   />
                 </div>
@@ -88,3 +99,4 @@ const Login = () => {
 };
 
 export default Login;
+

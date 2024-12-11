@@ -10,25 +10,33 @@ const UserPage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        console.log('UserPage.js - Obteniendo token de localStorage');
         const token = localStorage.getItem('token');
+        console.log('UserPage.js - Token obtenido:', token);
+        
         if (!token) {
+          console.warn('UserPage.js - No token found, redirecting to login');
           navigate('/login'); // Redirige si no hay token
           return;
         }
 
         // Obtener el nombre del usuario
+        console.log('UserPage.js - Fetching user data');
         const userResponse = await axios.get('http://localhost:5000/api/users/me', {
           headers: { Authorization: `Bearer ${token}` }
         });
+        console.log('UserPage.js - User data fetched:', userResponse.data);
         setUsername(userResponse.data.name); // Guarda el nombre del usuario en el estado
 
         // Obtener las listas
+        console.log('UserPage.js - Fetching lists');
         const listResponse = await axios.get('http://localhost:5000/api/lists', {
           headers: { Authorization: `Bearer ${token}` }
         });
+        console.log('UserPage.js - Lists fetched:', listResponse.data.lists);
         setLists(listResponse.data.lists || []);
       } catch (error) {
-        console.error('Error al obtener datos del usuario o listas:', error);
+        console.error('UserPage.js - Error al obtener datos del usuario o listas:', error);
       }
     };
 
@@ -37,10 +45,12 @@ const UserPage = () => {
 
   // Funcionalidad de botones
   const handleCreateList = () => {
+    console.log('UserPage.js - Redirigiendo a /task-list para crear una nueva lista');
     navigate('/task-list'); // Redirige a la página para crear lista
   };
 
   const handleViewList = () => {
+    console.log('UserPage.js - Redirigiendo a /view-lists para ver las listas');
     navigate('/view-lists'); // Ajusta esto a tu ruta real para ver listas
   };
 
@@ -67,4 +77,3 @@ const UserPage = () => {
 };
 
 export default UserPage;
-
