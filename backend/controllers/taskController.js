@@ -69,13 +69,25 @@ exports.updateTask = (req, res) => {
     const { id } = req.params;
     const { ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite } = req.body;
     const userID = req.user.userID;
-    const sql = 'UPDATE Tareas SET Tarea = ?, Prioridad = ?, Estado = ?, Fecha_Creación = ?, Fecha_Límite = ? WHERE ID_Tarea = ?';
+
+    const sql = `
+        UPDATE Tareas
+        SET ID_Lista = ?, Tarea = ?, Prioridad = ?, Estado = ?, Fecha_Creación = ?, Fecha_Límite = ?
+        WHERE ID_Tarea = ? AND userID = ?
+    `;
     console.log(`Actualizando tarea con ID ${id}:`, { Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite });
-    db.run(sql, [ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite, id], function(err) {
+
+    db.run(
+        sql,
+        [ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite, id, userID],
+        function(err) {
         if (err) {
             console.error(`Error al actualizar tarea con ID ${id}:`, err.message);
             res.status(500).json({ error: err.message });
             return;
+        }
+        if (this.changes === 0) {
+            return res.status(404).json({ error: "No se encontró la tarea para actualizar." });
         }
         res.json({
             task: {

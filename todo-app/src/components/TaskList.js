@@ -94,6 +94,7 @@ const TaskList = () => {
   const handleUpdateList = async (id, updatedName) => {
     try {
       const token = localStorage.getItem('token');
+      // console.error("Error al verificar el token:", error.message);
       const response = await axios.put(`http://localhost:5000/api/lists/${id}`, { name: updatedName }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -181,10 +182,7 @@ const TaskList = () => {
     console.log("ID recibido para editar:", id);
     console.log("Tareas disponibles:", tasks);
   
-   
-    const taskToEdit = tasks.find(
-      (t) => Number(t.ID_Tarea || t.id) === Number(id) 
-    );
+    const taskToEdit = tasks.find((t) => Number(t.ID_Tarea || t.id) === Number(id));
   
     if (taskToEdit) {
       console.log("Tarea encontrada para editar:", taskToEdit);
@@ -197,61 +195,25 @@ const TaskList = () => {
         Fecha_Límite: taskToEdit.Fecha_Límite || ''
       });
       setEditingTaskId(id);
-      console.log("Editing Task ID:", id);
+      console.log("Editing Task ID (actualizado):", id);
     } else {
       console.error("No se encontró la tarea con el ID:", id);
     }
   };
   
   
-
-  // const handleUpdateTask = async () => {
-  //   try {
-  //     const token = localStorage.getItem('token'); 
-  //     console.log("Datos enviados en handleUpdateTask:", {
-  //       ID_Lista: task.ID_Lista,
-  //       Tarea: task.Tarea,
-  //       Prioridad: task.Prioridad,
-  //       Estado: task.Estado,
-  //       Fecha_Creación: task.Fecha_Creación,
-  //       Fecha_Límite: task.Fecha_Límite
-  //     });
-  //     const response = await axios.put(`http://localhost:5000/api/tasks/${editingTaskId}`, {
-  //       ID_Lista: task.ID_Lista,
-  //       Tarea: task.Tarea,
-  //       Prioridad: task.Prioridad,
-  //       Estado: task.Estado,
-  //       Fecha_Creación: task.Fecha_Creación,
-  //       Fecha_Límite: task.Fecha_Límite
-  //     }, {
-  //       headers: { Authorization: `Bearer ${token}` } 
-  //     });
-  //     console.log("Respuesta del servidor:", response.data);
-  //     setTasks(tasks.map((t) => (t.ID_Tarea === editingTaskId ? response.data.task : t)));
-  //     setTask({
-  //       ID_Lista: '',
-  //       Tarea: '',
-  //       Prioridad: 'Hacer',
-  //       Estado: 'No Iniciado',
-  //       Fecha_Creación: '',
-  //       Fecha_Límite: ''
-  //     });
-  //     setEditingTaskId(null);
-  //   } catch (error) {
-  //     console.error('Error al actualizar tarea:', error);
-  //     if (error.response && error.response.status === 401){
-  //       navigate('login')
-  //     }
-  //   }
-  // };
   
   const handleUpdateTask = async () => {
     try {
-      const token = localStorage.getItem('token'); 
+      const token = localStorage.getItem('token');
+      console.log("Editing Task ID (antes del PUT):", editingTaskId);
   
-      // Depuración: Verifica los datos antes de enviarlos
+      if (!editingTaskId) {
+        console.error("Error: No hay una tarea seleccionada para actualizar.");
+        return;
+      }
+  
       console.log("Datos enviados en handleUpdateTask:", {
-        editingTaskId,
         ID_Lista: task.ID_Lista,
         Tarea: task.Tarea,
         Prioridad: task.Prioridad,
@@ -259,13 +221,6 @@ const TaskList = () => {
         Fecha_Creación: task.Fecha_Creación,
         Fecha_Límite: task.Fecha_Límite
       });
-  
-      // Validación adicional antes de enviar
-      if (!task.ID_Lista || !task.Tarea) {
-        console.error("Faltan datos obligatorios: ID_Lista o Tarea.");
-        alert("Por favor, completa todos los campos obligatorios.");
-        return;
-      }
   
       const response = await axios.put(`http://localhost:5000/api/tasks/${editingTaskId}`, {
         ID_Lista: task.ID_Lista,
@@ -275,24 +230,23 @@ const TaskList = () => {
         Fecha_Creación: task.Fecha_Creación,
         Fecha_Límite: task.Fecha_Límite
       }, {
-        headers: { Authorization: `Bearer ${token}` } 
+        headers: { Authorization: `Bearer ${token}` }
       });
   
-      console.log("Respuesta del servidor:", response.data);
-  
-      // Actualiza el estado con la tarea editada
+      console.log("Respuesta del servidor (PUT):", response.data);
       setTasks(tasks.map((t) => (t.ID_Tarea === editingTaskId ? response.data.task : t)));
       resetTaskForm();
     } catch (error) {
       console.error('Error al actualizar tarea:', error);
       if (error.response) {
-        console.error("Respuesta del servidor:", error.response.data);
+        console.error("Respuesta del servidor (error):", error.response.data);
       }
       if (error.response && error.response.status === 401) {
         navigate('/login');
       }
     }
   };
+  
   
   const handleDeleteTask = async (id) => {
     try {
