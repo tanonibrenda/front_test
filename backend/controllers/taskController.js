@@ -39,5 +39,51 @@ exports.createTask = (req, res) => {
     const userID = req.user.userID;
     console.log('TaskController.js - createTask - Creando nueva tarea con datos:', { ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite, userID });
 
-    const sql = 'INSERT INTO Tareas (ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite) VALUES (?, ?, ?, ?, ?, ?)';
-    db.run(sql, [ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite],
+    const sql = 'INSERT INTO Tareas (ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite, userID) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    db.run(sql, [ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite, userID], function(err) {
+        if (err) {
+            console.error('TaskController.js - Error al crear tarea:', err.message);
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        console.log('TaskController.js - Tarea creada con ID:', this.lastID);
+        res.json({ taskID: this.lastID });
+    });
+};
+
+// Actualizar tarea por ID
+exports.updateTask = (req, res) => {
+    const { id } = req.params;
+    const { ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite } = req.body;
+    const userID = req.user.userID;
+    console.log('TaskController.js - updateTask - Actualizando tarea con ID:', id, 'y datos:', { ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite, userID });
+
+    const sql = 'UPDATE Tareas SET ID_Lista = ?, Tarea = ?, Prioridad = ?, Estado = ?, Fecha_Creación = ?, Fecha_Límite = ? WHERE ID_Tarea = ? AND userID = ?';
+    db.run(sql, [ID_Lista, Tarea, Prioridad, Estado, Fecha_Creación, Fecha_Límite, id, userID], function(err) {
+        if (err) {
+            console.error('TaskController.js - Error al actualizar tarea con ID:', id, err.message);
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        console.log('TaskController.js - Tarea actualizada con ID:', id);
+        res.json({ message: 'Tarea actualizada correctamente' });
+    });
+};
+
+// Eliminar tarea por ID
+exports.deleteTask = (req, res) => {
+    const { id } = req.params;
+    const userID = req.user.userID;
+    console.log('TaskController.js - deleteTask - Eliminando tarea con ID:', id);
+
+    const sql = 'DELETE FROM Tareas WHERE ID_Tarea = ? AND userID = ?';
+    db.run(sql, [id, userID], function(err) {
+        if (err) {
+            console.error('TaskController.js - Error al eliminar tarea con ID:', id, err.message);
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        console.log('TaskController.js - Tarea eliminada con ID:', id);
+        res.json({ message: 'Tarea eliminada correctamente' });
+    });
+};
