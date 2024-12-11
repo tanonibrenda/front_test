@@ -25,11 +25,8 @@ const TaskList = () => {
           navigate('/login');
           return;
         }
-        //
-        // const response = await axios.get('http://localhost:5000/api/task', {
-          const response = await axios.get('http://localhost:5000/api/lists', {
+        const response = await axios.get('http://localhost:5000/api/lists', {
           headers: { Authorization: `Bearer ${token}` } 
-
         });
         setLists(response.data.lists || []);
         console.log('Lists:', response.data.lists);
@@ -42,7 +39,7 @@ const TaskList = () => {
     };
     fetchLists();
   }, [navigate]);
-
+  
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -54,6 +51,8 @@ const TaskList = () => {
         const response = await axios.get('http://localhost:5000/api/tasks', {
           headers: { Authorization: `Bearer ${token}` } 
         });
+        console.log("Datos de tareas recibidos:", response.data.tasks);
+
         setTasks(response.data.tasks || []);
         console.log('Tasks:', response.data.tasks);
       } catch (error) {
@@ -65,7 +64,12 @@ const TaskList = () => {
     };
     fetchTasks();
   }, [navigate]);
-
+  
+  // Nuevo useEffect para depurar editingTaskId
+  useEffect(() => {
+    console.log("Estado editingTaskId actualizado a:", editingTaskId);
+  }, [editingTaskId]);
+  
   const handleCreateList = async () => {
     try {
       const token = localStorage.getItem('token'); 
@@ -174,8 +178,16 @@ const TaskList = () => {
   };
 
   const handleEditTask = (id) => {
-    const taskToEdit = tasks.find((t) => t.ID_Tarea === id);
+    console.log("ID recibido para editar:", id);
+    console.log("Tareas disponibles:", tasks);
+  
+   
+    const taskToEdit = tasks.find(
+      (t) => Number(t.ID_Tarea || t.id) === Number(id) 
+    );
+  
     if (taskToEdit) {
+      console.log("Tarea encontrada para editar:", taskToEdit);
       setTask({
         ID_Lista: taskToEdit.ID_Lista || '',
         Tarea: taskToEdit.Tarea || '',
@@ -185,16 +197,76 @@ const TaskList = () => {
         Fecha_Límite: taskToEdit.Fecha_Límite || ''
       });
       setEditingTaskId(id);
-      setTimeout(() => {
-        console.log('Editing Task ID:', id);
-      }, 0);
-
+      console.log("Editing Task ID:", id);
+    } else {
+      console.error("No se encontró la tarea con el ID:", id);
     }
   };
+  
+  
 
+  // const handleUpdateTask = async () => {
+  //   try {
+  //     const token = localStorage.getItem('token'); 
+  //     console.log("Datos enviados en handleUpdateTask:", {
+  //       ID_Lista: task.ID_Lista,
+  //       Tarea: task.Tarea,
+  //       Prioridad: task.Prioridad,
+  //       Estado: task.Estado,
+  //       Fecha_Creación: task.Fecha_Creación,
+  //       Fecha_Límite: task.Fecha_Límite
+  //     });
+  //     const response = await axios.put(`http://localhost:5000/api/tasks/${editingTaskId}`, {
+  //       ID_Lista: task.ID_Lista,
+  //       Tarea: task.Tarea,
+  //       Prioridad: task.Prioridad,
+  //       Estado: task.Estado,
+  //       Fecha_Creación: task.Fecha_Creación,
+  //       Fecha_Límite: task.Fecha_Límite
+  //     }, {
+  //       headers: { Authorization: `Bearer ${token}` } 
+  //     });
+  //     console.log("Respuesta del servidor:", response.data);
+  //     setTasks(tasks.map((t) => (t.ID_Tarea === editingTaskId ? response.data.task : t)));
+  //     setTask({
+  //       ID_Lista: '',
+  //       Tarea: '',
+  //       Prioridad: 'Hacer',
+  //       Estado: 'No Iniciado',
+  //       Fecha_Creación: '',
+  //       Fecha_Límite: ''
+  //     });
+  //     setEditingTaskId(null);
+  //   } catch (error) {
+  //     console.error('Error al actualizar tarea:', error);
+  //     if (error.response && error.response.status === 401){
+  //       navigate('login')
+  //     }
+  //   }
+  // };
+  
   const handleUpdateTask = async () => {
     try {
       const token = localStorage.getItem('token'); 
+  
+      // Depuración: Verifica los datos antes de enviarlos
+      console.log("Datos enviados en handleUpdateTask:", {
+        editingTaskId,
+        ID_Lista: task.ID_Lista,
+        Tarea: task.Tarea,
+        Prioridad: task.Prioridad,
+        Estado: task.Estado,
+        Fecha_Creación: task.Fecha_Creación,
+        Fecha_Límite: task.Fecha_Límite
+      });
+  
+      // Validación adicional antes de enviar
+      if (!task.ID_Lista || !task.Tarea) {
+        console.error("Faltan datos obligatorios: ID_Lista o Tarea.");
+        alert("Por favor, completa todos los campos obligatorios.");
+        return;
+      }
+  
       const response = await axios.put(`http://localhost:5000/api/tasks/${editingTaskId}`, {
         ID_Lista: task.ID_Lista,
         Tarea: task.Tarea,
@@ -205,25 +277,23 @@ const TaskList = () => {
       }, {
         headers: { Authorization: `Bearer ${token}` } 
       });
+  
+      console.log("Respuesta del servidor:", response.data);
+  
+      // Actualiza el estado con la tarea editada
       setTasks(tasks.map((t) => (t.ID_Tarea === editingTaskId ? response.data.task : t)));
-      setTask({
-        ID_Lista: '',
-        Tarea: '',
-        Prioridad: 'Hacer',
-        Estado: 'No Iniciado',
-        Fecha_Creación: '',
-        Fecha_Límite: ''
-      });
-      setEditingTaskId(null);
+      resetTaskForm();
     } catch (error) {
       console.error('Error al actualizar tarea:', error);
-      if (error.response && error.response.status === 401){
-        navigate('login')
+      if (error.response) {
+        console.error("Respuesta del servidor:", error.response.data);
+      }
+      if (error.response && error.response.status === 401) {
+        navigate('/login');
       }
     }
   };
   
-
   const handleDeleteTask = async (id) => {
     try {
       const token = localStorage.getItem('token'); 
@@ -465,27 +535,34 @@ const TaskList = () => {
             <h3 id="lista-tareas">Lista de Tareas</h3>
             <ul className="list-unstyled">
               {tasks.length > 0 &&
-                tasks.map((task, index) => (
-                  <li key={`${task.ID_Tarea}-${index}`} className="mb-2">
-                    {task.Tarea} - {task.Prioridad} - {task.Estado} - {task.Fecha_Creación} -{' '}
-                    {task.Fecha_Límite} - Lista:{' '}
-                    {lists.find((list) => Number(list.id) === Number(task.ID_Lista))?.name || 'Sin lista'}
-                    <button
-                      className="btn btn-warning ml-3"
-                      onClick={() => handleEditTask(task.ID_Tarea)}
-                      aria-label={`Editar tarea ${task.Tarea}`}
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className="btn btn-danger ml-3"
-                      onClick={() => handleDeleteTask(task.ID_Tarea)}
-                      aria-label={`Eliminar tarea ${task.Tarea}`}
-                    >
-                      Borrar
-                    </button>
-                  </li>
-                ))}
+                tasks.map((task, index) =>  {
+                  console.log("Tarea en el mapeo:", task);
+                 
+                  return (
+                    // <li key={`${task.ID_Tarea || task.id}-${index}`} className="mb-2">
+                       < li key={task.ID_Tarea || task.id || index} className="mb-2">
+                      {task.Tarea} - {task.Prioridad} - {task.Estado}
+                      <button
+  className="btn btn-warning ml-3"
+  onClick={() => {
+    console.log("ID enviado al editar:", task.ID_Tarea || task.id);
+    handleEditTask(task.ID_Tarea || task.id);
+  }}
+  aria-label={`Editar tarea ${task.Tarea}`}
+>
+  Editar
+</button>
+
+                      <button
+        className="btn btn-danger ml-3"
+        onClick={() => handleDeleteTask(task.ID_Tarea || task.id)}
+        aria-label={`Eliminar tarea ${task.Tarea}`}
+      >
+        Borrar
+      </button>
+                    </li>
+                  );
+                })};
             </ul>
           </section>
         </div>
