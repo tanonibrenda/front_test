@@ -1,16 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-// import '../styles/Footer'
+import '../App.css';
 
 const Footer = () => (
-  <footer className="bg-light text-center text-white mt-5" style={{ backgroundColor: '#FF5733' }}>
+  <footer className="custom-footer text-center text-white mt-5">
     <div className="container p-4">
       {/* Sección de enlaces de navegación */}
       <section className="mb-4">
         <nav>
           <ul className="list-unstyled d-flex justify-content-center gap-3 mb-3">
-            <li><Link to="/contact" className="text-dark text-decoration-none">Contacto</Link></li>
-            <li><Link to="/newsletter" className="text-dark text-decoration-none">Newsletter</Link></li>
+            <li><Link to="/contact" className="text-black text-decoration-none">Contacto</Link></li>
+            <li><Link to="/newsletter" className="text-black text-decoration-none">Newsletter</Link></li>
           </ul>
         </nav>
       </section>
@@ -38,9 +38,9 @@ const Footer = () => (
     </div>
 
     {/* Derechos de autor */}
-    <div className="text-center p-3">
+    <div className="text-center p-3" id='copyrigth'>
       © 2024 Copyright:
-      <a className="text-dark text-decoration-none ms-1" href="#"></a>
+      <a className="text-white text-decoration-none ms-1" href="#"></a>
     </div>
   </footer>
 );
