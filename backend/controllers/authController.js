@@ -11,16 +11,16 @@ exports.register = (req, res) => {
 
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(Contraseña, salt);
-    console.log('Contraseña encriptada:', hashedPassword);
+    console.log('Contraseña encriptada para authController:', hashedPassword);
 
     const sql = 'INSERT INTO Usuarios (Nombre, Apellido, Email, Contraseña) VALUES (?, ?, ?, ?)';
     db.run(sql, [Nombre, Apellido, Email, hashedPassword], function(err) {
         if (err) {
-            console.error('Error al registrar usuario:', err.message);
+            console.error('Error al registrar usuario en authController:', err.message);
             res.status(500).json({ error: err.message });
             return;
         }
-        console.log('Usuario registrado con ID:', this.lastID);
+        console.log('Usuario registrado con ID en authController:', this.lastID);
         res.json({ userID: this.lastID });
     });
 };
@@ -28,7 +28,7 @@ exports.register = (req, res) => {
 // Inicio de sesión de un usuario
 exports.login = (req, res) => {
     const { Email, Contraseña } = req.body;
-    console.log('Intento de inicio de sesión con email:', Email);
+    console.log('Intento de inicio de sesión con email por authController:', Email);
 
     const sql = 'SELECT * FROM Usuarios WHERE Email = ?';
     db.get(sql, [Email], (err, user) => {
@@ -38,25 +38,26 @@ exports.login = (req, res) => {
             return;
         }
         if (!user) {
-            console.warn('Usuario no encontrado para el email:', Email);
+            console.warn('Usuario no encontrado para el email en authController:', Email);
             res.status(404).json({ error: 'Usuario no encontrado' });
             return;
         }
-        console.log('Usuario encontrado:', user);
+        console.log('Usuario encontrado: en authController', user);
 
         const validPassword = bcrypt.compareSync(Contraseña, user.Contraseña);
         if (!validPassword) {
-            console.warn('Contraseña incorrecta para el usuario:', Email);
+            console.warn('Contraseña incorrecta para el usuario: en AuthController.js', Email);
             res.status(401).json({ error: 'Contraseña incorrecta' });
             return;
         }
-        console.log('Contraseña válida, generando token...');
+        console.log('Contraseña válida, generando token en authController...');
 
         // Verificación de la carga de la clave secreta JWT
-        console.log('JWT_SECRET:', process.env.JWT_SECRET); 
+        const secret = process.env.JWT_SECRET;
+        console.log('AuthController.js - JWT_SECRET:', secret)
+            if (!secret) { console.error('AuthController.js - Error: JWT_SECRET no está definido'); res.status(500).json({ error: 'Configuración del servidor incorrecta' }); return; }
 
-        const token = jwt.sign({ userID: user.ID_Usuarios }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        console.log('Token generado:', token);
+            const token = jwt.sign({ userID: user.ID_Usuarios }, secret, { expiresIn: '1h' }); console.log('AuthController.js - Token generado:', token);
 
         res.json({ token, user });
     });

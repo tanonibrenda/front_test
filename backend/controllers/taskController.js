@@ -47,7 +47,18 @@ exports.createTask = (req, res) => {
             return;
         }
         console.log('TaskController.js - Tarea creada con ID:', this.lastID);
-        res.json({ taskID: this.lastID });
+        const sqlSelect = 'SELECT * FROM Tareas WHERE ID_Tarea = ?'; 
+        db.get(sqlSelect, [this.lastID], (err, row) => { 
+            if (err) {
+                console.error('TaskController.js - Error al obtener la tarea recién creada:', err.message);        
+                res.status(500).json({ error: err.message }); 
+                return; 
+            }
+             console.log('TaskController.js - Tarea recién creada:', row); 
+             res.json({ task: row });
+            });
+        // console.log('TaskController.js - Tarea creada con ID:', this.lastID);
+        // res.json({ taskID: this.lastID });
     });
 };
 
@@ -66,7 +77,18 @@ exports.updateTask = (req, res) => {
             return;
         }
         console.log('TaskController.js - Tarea actualizada con ID:', id);
-        res.json({ message: 'Tarea actualizada correctamente' });
+        // res.json({ message: 'Tarea actualizada correctamente' });
+
+        const sqlSelect = 'SELECT * FROM Tareas WHERE ID_Tarea = ?'; 
+        db.get(sqlSelect, [id], (err, row) => { 
+            if (err) { 
+                console.error('TaskController.js - Error al obtener la tarea actualizada:', err.message);
+                res.status(500).json({ error: err.message }); 
+                return;
+             }
+              console.log('TaskController.js - Tarea actualizada:', row); 
+              res.json({ task: row });
+    });
     });
 };
 

@@ -168,11 +168,12 @@ const handleCreateTask = async () => {
     });
   } catch (error) {
     console.error('TaskList.js - Error al crear tarea:', error);
-    if (error.response && error.response.status === 401){
+    if (error.response && error.response.status === 401) {
       navigate('/login');
     }
   }
 };
+
 
 const handleEditTask = (id) => {
   console.log('TaskList.js - handleEditTask - ID recibido para editar:', id);
@@ -232,6 +233,10 @@ const handleUpdateTask = async () => {
     });
 
     console.log('TaskList.js - handleUpdateTask - Respuesta del servidor:', response.data);
+
+    if (!response.data.task) { 
+      console.error('TaskList.js - handleUpdateTask - Tarea actualizada pero no recibida en la respuesta:', response.data); 
+      return; }
     setTasks(tasks.map((t) => (t.ID_Tarea === editingTaskId ? response.data.task : t)));
     resetTaskForm();
   } catch (error) {
@@ -493,6 +498,10 @@ return (
             {tasks.length > 0 &&
               tasks.map((task, index) =>  {
                 console.log("Tarea en el mapeo:", task);
+                if (!task) { 
+                  console.warn('TaskList.js - task is undefined:', task); 
+                  return null; }
+              
                
                 return (
                   // <li key={`${task.ID_Tarea || task.id}-${index}`} className="mb-2">
