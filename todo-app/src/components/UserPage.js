@@ -50,8 +50,8 @@ const UserPage = () => {
   };
 
   const handleViewList = () => {
-    console.log('UserPage.js - Redirigiendo a /view-lists para ver las listas');
-    navigate('/view-lists'); // Ajusta esto a tu ruta real para ver listas
+    console.log('UserPage.js - Redirigiendo a /viewlists para ver las listas');
+    navigate('/viewlist');
   };
 
   return (
@@ -62,7 +62,7 @@ const UserPage = () => {
         <button className="btn btn-secondary" onClick={handleViewList}>Ver Lista</button>
       </div>
 
-      <h3 className="mt-5">Tus Listas</h3>
+      {/* <h3 className="mt-5">Tus Listas</h3>
       {lists.length > 0 ? (
         <ul className="list-unstyled">
           {lists.map((list) => (
@@ -71,7 +71,7 @@ const UserPage = () => {
         </ul>
       ) : (
         <p>No hay listas disponibles</p>
-      )}
+      )} */}
     </div>
   );
 };

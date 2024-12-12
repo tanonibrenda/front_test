@@ -25,7 +25,11 @@ const ContactPage = () => {
 
   return (
     <div className="container mt-5">
-      <h2>Contacto</h2>
+      <div className="row justify-content-center">
+      <div className="col-md-6 col-lg-4">
+      <div className="card shadow-sm">
+      <div className="card-body">
+      <h1 className="text-center text-primary mb-4">Contacto</h1>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="name">Nombre</label>
@@ -62,8 +66,14 @@ const ContactPage = () => {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary">Enviar</button>
+        <div className="d-grid mt-2">
+        <button type="submit" className="btn btn-primary py-2 fw-bold">Enviar</button>
+        </div>
       </form>
+    </div>
+    </div>
+    </div>
+    </div>
     </div>
   );
 };

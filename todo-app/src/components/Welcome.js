@@ -7,7 +7,7 @@ const Welcome = ({ nombre, apellido }) => {
 
   return (
     <div className="container mt-5 text-center">
-      <h2>Bienvenida {nombre} {apellido}</h2>
+      <h1>Bienvenido {nombre} {apellido}</h1>
       <div className="mt-4">
         <Link to="/crear-lista" className="btn btn-primary mr-3">
           Crear Lista

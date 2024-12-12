@@ -3,9 +3,14 @@ const db = new sqlite3.Database('./db/database.db');
 
 // Obtener todas las listas para un usuario
 const getAllListsForUser = (req, res) => {
-    const userId = req.user.id;
+    const userId = req.user.userID;
+    
+    if (!userId){
+        console.error('ListController.js - User ID no definido'); 
+        res.status(401).json({ error: 'Usuario no autenticado' }); 
+        return;
+    }
     console.log('ListController.js - getAllListsForUser - User ID:', userId);
-
     const sql = 'SELECT * FROM Listas WHERE userID = ?';
     db.all(sql, [userId], (err, rows) => {
         if (err) {

@@ -13,6 +13,8 @@ import UserPage from './components/UserPage';
 // import MyList from './components/My_List';
 import EditTask from './components/EditTask'; 
 import ContactPage from './components/ContactPage';
+import ViewList from './components/ViewList';
+import Newsletter from './components/Newsletters';
 import './App.css';
 
 function App() {
@@ -32,18 +34,18 @@ function App() {
     <Router>
       <div className="App">
         <Header/>
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/welcome" element={<Welcome nombre={nombre} apellido={apellido} />} />
-          <Route path="/create-list" element={<CreateList />} />
-          <Route path="/task-list" element={<TaskList />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/user-page" element={<PrivateRoute element={UserPage} />} />
-          <Route path="/contact" element={<ContactPage />}/>
-          
-          <Route path="/edit-task/:taskId" element={<PrivateRoute element={EditTask} />} /> 
+        <Routes> <Route exact path="/" element={<Home />} /> 
+        <Route path="/register" element={<Register />} /> 
+        <Route path="/login" element={<Login />} /> 
+        <Route path="/welcome" element={<Welcome nombre={nombre} apellido={apellido} />} /> 
+        <Route path="/create-list" element={<CreateList />} /> 
+        <Route path="/task-list" element={<TaskList />} /> 
+        <Route path="/about" element={<About />} /> 
+        <Route path="/user-page" element={<PrivateRoute element={UserPage} />} /> 
+        <Route path="/contact" element={<ContactPage />} /> 
+        <Route path="/viewlist" element={<PrivateRoute element={ViewList} />} /> 
+        <Route path="/edit-task/:taskId" element={<PrivateRoute element={EditTask} />} /> 
+        <Route path="/newsletter" element={<Newsletter />} />
         </Routes>
         <Footer />
       </div>
