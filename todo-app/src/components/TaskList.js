@@ -234,7 +234,7 @@ const handleUpdateTask = async () => {
 
     console.log('TaskList.js - handleUpdateTask - Respuesta del servidor:', response.data);
 
-    if (!response.data.task) { 
+    if (!response.data) { 
       console.error('TaskList.js - handleUpdateTask - Tarea actualizada pero no recibida en la respuesta:', response.data); 
       return; }
     setTasks(tasks.map((t) => (t.ID_Tarea === editingTaskId ? response.data.task : t)));
