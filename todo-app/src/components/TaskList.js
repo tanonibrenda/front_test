@@ -300,7 +300,7 @@ return (
         <form aria-labelledby="form-crear-lista">
           <div className="form-group">
             <label htmlFor="listName" className="form-label">
-              Nombre de la lista
+            <h3>Nombre de la lista</h3>
             </label>
             <input
               type="text"
@@ -325,33 +325,37 @@ return (
         <hr />
 
         {/* Listado de listas */}
-        <section aria-labelledby="listas">
-          <h3 id="listas">Listas</h3>
-          <ul className="list-unstyled">
-            {lists.length > 0 &&
-              lists.map((list, index) => (
-                <li key={`${list.id}-${index}`} className="mb-2">
-                  <span>{list.name}</span>
-                  <button
-                    className="btn btn-warning ml-3"
-                    onClick={() =>
-                      handleUpdateList(list.id, prompt('Nuevo nombre de la lista:', list.name))
-                    }
-                    aria-label={`Editar lista ${list.name}`}
-                  >
-                    Editar
-                  </button>
-                  <button
-                    className="btn btn-danger ml-3"
-                    onClick={() => handleDeleteList(list.id)}
-                    aria-label={`Eliminar lista ${list.name}`}
-                  >
-                    Borrar
-                  </button>
-                </li>
-              ))}
-          </ul>
+       
+
+ <section aria-labelledby="listas"> 
+  <h3 id="listas">Listas</h3> 
+  <ul className="list-unstyled"> 
+    {lists.length > 0 && 
+    lists.map((list, index) => ( 
+    <li key={`${list.id}-${index}`} className="d-flex justify-content-between align-items-center mb-2"> 
+    <span>{list.name}</span> 
+    <div> 
+      <button
+       className="btn btn-warning ml-2"
+        onClick={() => handleUpdateList(list.id, prompt('Nuevo nombre de la lista:', list.name)) 
+
+        } 
+        aria-label={`Editar lista ${list.name}`
+        } 
+        > Editar </button> 
+        <button 
+        className="btn btn-danger ml-2" 
+        onClick={() => handleDeleteList(list.id)} aria-label={`Eliminar lista ${list.name}`
+        }
+         > Borrar </button> 
+         </div>
+          </li> 
+        ))
+        } 
+        </ul> 
         </section>
+
+        
 
         <hr />
 
@@ -392,6 +396,7 @@ return (
               value={task.Tarea}
               onChange={handleChange}
               aria-required="true"
+              placeholder='Ingrese su tarea'
             />
           </div>
           <div className="form-group">
@@ -492,44 +497,36 @@ return (
         <hr />
 
         {/* Lista de tareas */}
-        <section aria-labelledby="lista-tareas">
-          <h3 id="lista-tareas">Lista de Tareas</h3>
-          <ul className="list-unstyled">
-            {tasks.length > 0 &&
-              tasks.map((task, index) =>  {
-                console.log("Tarea en el mapeo:", task);
-                if (!task) { 
-                  console.warn('TaskList.js - task is undefined:', task); 
-                  return null; }
-              
-               
-                return (
-                  // <li key={`${task.ID_Tarea || task.id}-${index}`} className="mb-2">
-                     < li key={task.ID_Tarea || task.id || index} className="mb-2">
-                    {task.Tarea} - {task.Prioridad} - {task.Estado}
-                    <button
-className="btn btn-warning ml-3"
-onClick={() => {
-  console.log("ID enviado al editar:", task.ID_Tarea || task.id);
-  handleEditTask(task.ID_Tarea || task.id);
-}}
-aria-label={`Editar tarea ${task.Tarea}`}
->
-Editar
-</button>
 
-                    <button
-      className="btn btn-danger ml-3"
-      onClick={() => handleDeleteTask(task.ID_Tarea || task.id)}
-      aria-label={`Eliminar tarea ${task.Tarea}`}
-    >
-      Borrar
-    </button>
-                  </li>
-                );
-              })};
-          </ul>
-        </section>
+<section aria-labelledby="lista-tareas"> 
+  <h3 id="lista-tareas">Lista de Tareas</h3> 
+  <ul className="list-unstyled"> {tasks.length > 0 && 
+  tasks.map((task, index) => { console.log("Tarea en el mapeo:", task);
+   if (!task) 
+   { console.warn('TaskList.js - task is undefined:', task);
+    return null;
+     } 
+     return ( <li key={task.ID_Tarea || task.id || index} className="d-flex justify-content-between align-items-center mb-2"> 
+     <span> {task.Tarea} - {task.Prioridad} - {task.Estado} </span> 
+     <div> 
+      <button 
+      className="btn btn-warning ml-2" onClick={
+        () => { console.log("ID enviado al editar:", task.ID_Tarea || task.id);
+         handleEditTask(task.ID_Tarea || task.id); }
+         } aria-label={`Editar tarea ${task.Tarea}`}
+          > Editar </button>
+           <button
+            className="btn btn-danger ml-2" onClick={
+              () => handleDeleteTask(task.ID_Tarea || task.id)} aria-label={`Eliminar tarea ${task.Tarea}`}
+               > Borrar </button> 
+               </div> 
+               </li> 
+              );
+               })
+               }
+                </ul>
+                 </section>
+
       </div>
     </div>
   </div>

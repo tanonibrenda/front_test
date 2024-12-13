@@ -56,22 +56,21 @@ const UserPage = () => {
 
   return (
     <div className="container mt-5 text-center">
-      <h2>Bienvenida {username}</h2>
+      <h2>Bienvenido {username}</h2>
       <div className="d-flex justify-content-center gap-3 mt-4">
         <button className="btn btn-primary" onClick={handleCreateList}>Crear Lista</button>
-        <button className="btn btn-secondary" onClick={handleViewList}>Ver Lista</button>
+        {/* <button className="btn btn-secondary" onClick={handleViewList}>Ver Lista</button> */}
+      </div>
+      <div className='container'>
+      <div className='mt-5'>
+      <p>
+        Ahora puedes creas y gestionar tus listas para trabajar de forma más eficiente.
+      </p>
+
+      </div>
       </div>
 
-      {/* <h3 className="mt-5">Tus Listas</h3>
-      {lists.length > 0 ? (
-        <ul className="list-unstyled">
-          {lists.map((list) => (
-            <li key={list.id} className="mt-2">{list.name}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>No hay listas disponibles</p>
-      )} */}
+
     </div>
   );
 };

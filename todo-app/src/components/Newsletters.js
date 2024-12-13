@@ -25,19 +25,7 @@ const Newsletter = () => {
         </ul>
       </section>
       
-      {/* <section className="mt-5">
-        <h3 className="text-primary">Suscríbete a Nuestro Boletín</h3>
-        <p>
-          Mantente al día con las últimas noticias y tendencias en gestión de proyectos y productividad. Suscríbete a nuestro boletín mensual para recibir consejos, herramientas y actualizaciones directamente en tu bandeja de entrada.
-        </p>
-        <form>
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label">Correo Electrónico</label>
-            <input type="email" className="form-control" id="email" placeholder="nombre@ejemplo.com" required />
-          </div>
-          <button type="submit" className="btn btn-primary">Suscribirse</button>
-        </form>
-      </section> */}
+      
     </div>
   );
 };
