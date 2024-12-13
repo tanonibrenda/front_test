@@ -41,6 +41,7 @@ const ContactPage = () => {
             value={formData.name}
             onChange={handleChange}
             required
+            placeholder='Ingrese su nombre'
           />
         </div>
         <div className="form-group">
@@ -53,6 +54,7 @@ const ContactPage = () => {
             value={formData.email}
             onChange={handleChange}
             required
+            placeholder='Ingrese su e-mail'
           />
         </div>
         <div className="form-group">
@@ -64,6 +66,7 @@ const ContactPage = () => {
             value={formData.message}
             onChange={handleChange}
             required
+            placeholder='Ingrese su mensaje'
           />
         </div>
         <div className="d-grid mt-2">

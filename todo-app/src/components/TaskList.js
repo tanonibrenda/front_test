@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,6 +6,7 @@ const TaskList = () => {
   const [listName, setListName] = useState('');
   const [lists, setLists] = useState([]);
   const [tasks, setTasks] = useState([]);
+  const listRef = useRef(null)
   const [task, setTask] = useState({
     ID_Lista: '',
     Tarea: '',
@@ -71,6 +72,15 @@ const TaskList = () => {
   useEffect(() => {
     console.log('TaskList.js - Estado editingTaskId actualizado a:', editingTaskId);
   }, [editingTaskId]);
+  
+
+  useEffect(()=>{
+    if(listRef.current){
+      listRef.current.setAttribute('aria-live', 'polite')
+    }
+  },[lists]
+
+  );
   
   const handleCreateList = async () => {
     try {

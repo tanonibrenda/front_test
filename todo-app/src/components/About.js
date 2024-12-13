@@ -5,14 +5,15 @@ const About = () => (
     <section className="hero">
       <h1 className="text-center text-primary mb-4">Sobre Nosotros</h1>
       <div className="container mx-auto mt-4">
-      <p>Bienvenidos a nuestro proyecto final para el Bootscamp Full Stack de Cilsa. Para cumplir los requisitos del programa construimos una web responsive y accesible con una app de "To Do List" utilizanco React, Javascript y Sqlite2.<br/>
-      La gestión de proyecto se hizo con espíritu de respetar la inclusión y accesibilidad. Se utilizaron herramientas que sean accesibles para todos los miembros del equipo:
+      <p>Bienvenidos a nuestro proyecto final para el Bootscamp Full Stack de Cilsa. Para cumplir los requisitos del programa construimos una web responsive y accesible con una app de <span lang="en">"To Do List"</span> utilizanco React, Javascript y Sqlite2.<br/>
+      La gestión de proyecto se hizo con espíritu de respetar la inclusión y accesibilidad. Se trató de utilizar herramientas que sean accesibles para todos los miembros del equipo:
       </p>
       <ul>
       <li>Se creó un grupo de WhatsApp.</li>
       <li>Se creo una carpeta en Google Drive para Compartir documentos.</li>
       <li>Se creó un repositorio para gestión de versiones.</li>
       </ul>
+  <p>Aunque, por la naturaleza del proyecto, algunas de las herramientas que se tuvieron que utilizar no contaban con accesibilidad, como por ejemplo Postman. Tratamos de ayudarnos entre todos para cumplir con los requisitos y fechas.  </p>
       </div>
       <div className="container mx-auto mt-4">
         <div className="row">

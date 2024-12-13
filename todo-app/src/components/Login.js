@@ -51,7 +51,7 @@ const Login = () => {
                     type="email"
                     className="form-control"
                     id="email"
-                    placeholder="mimail@email.com"
+                    placeholder="ingrese su correo electrónico"
                     value={email}
                     onChange={(e) => {
                       console.log('Login.js - Cambio en el campo email:', e.target.value);

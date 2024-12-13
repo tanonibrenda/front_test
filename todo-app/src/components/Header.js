@@ -23,7 +23,7 @@ const Header = () => {
       <nav className={`navbar navbar-expand-lg ${darkMode ? 'dark-header' : ''}`}>
         <div className="container-fluid">
           <Link to="/" className="navbar-brand">
-            <img src="/img/checkverde.gif" alt="Logo" style={{ height: '40px', marginRight: '10px' }} />
+      <img src="/img/checkverde.gif" alt="Logo para ir a pagina principal   " style={{ height: '40px', marginRight: '10px' }} />
           </Link>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">

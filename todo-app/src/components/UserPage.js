@@ -56,10 +56,10 @@ const UserPage = () => {
 
   return (
     <div className="container mt-5 text-center">
-      <h2>Bienvenido {username}</h2>
+      <h1>Bienvenido {username}</h1>
       <div className="d-flex justify-content-center gap-3 mt-4">
         <button className="btn btn-primary" onClick={handleCreateList}>Crear Lista</button>
-        {/* <button className="btn btn-secondary" onClick={handleViewList}>Ver Lista</button> */}
+        
       </div>
       <div className='container'>
       <div className='mt-5'>
